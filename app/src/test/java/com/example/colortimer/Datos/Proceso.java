@@ -1,4 +1,4 @@
-package com.example.colortimer;
+package com.example.colortimer.Datos;
 
 public class Proceso {
     private int id;
