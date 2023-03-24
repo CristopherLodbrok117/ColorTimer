@@ -22,6 +22,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private String currentPhotoPath;
     private ImageView img;
     private Button btnProcesos;
+    private DaoProceso dbProceso;
 
 
     @Override
@@ -48,10 +50,9 @@ public class MainActivity extends AppCompatActivity {
             }, 1000);
         }
 
-        DaoProceso dbProceso = new DaoProceso(MainActivity.this);
+        dbProceso = new DaoProceso(MainActivity.this);
         Proceso p = new Proceso();
-        Toast.makeText(MainActivity.this,"Id: "+p.getEstado(),Toast.LENGTH_LONG).show();
-        p.setId(dbProceso.crear(p));
+        p.setId((int) dbProceso.crear(p));
     }
 
     private File createImageFile() throws IOException {
@@ -103,6 +104,16 @@ public class MainActivity extends AppCompatActivity {
     }
     public void abreProcesosActivity(View view){
         Intent aProcesos = new Intent(this,ProcesosActivity.class);
+        Bundle datos = new Bundle();
+        ArrayList<Proceso> procesos = dbProceso.listar();
+        ArrayList<String> procesosStr = new ArrayList<>();
+
+        for(int i = 0; i < procesos.size(); i++){
+            procesosStr.add(procesos.get(i).toString());
+        }
+
+        datos.putStringArrayList("Procesos",procesosStr);
+        aProcesos.putExtras(datos);
         startActivity(aProcesos);
     }
 }

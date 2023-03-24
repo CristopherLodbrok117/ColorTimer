@@ -6,18 +6,13 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.colortimer.DAO.DaoProceso;
-import com.example.colortimer.Datos.Proceso;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class ProcesosActivity extends AppCompatActivity {
     private ArrayAdapter<String> arrayAdapter;
     private ListView procesosListView;
-    private List<String> listaProcesosStr;
-    private List<Proceso> listaProcesos;
+    private List<String> listaProcesos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,20 +20,15 @@ public class ProcesosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_procesos);
         procesosListView = (ListView) findViewById(R.id.listaProcesos);
         listaProcesos = new ArrayList<>();
-        listaProcesosStr = new ArrayList<>();
-        DaoProceso dbProceso = new DaoProceso(ProcesosActivity.this);
+        // Toma los datos extra que se envian, en este caso, datos de los procesos
+        Bundle datosExtra = getIntent().getExtras();
 
-        try {
-            listaProcesos = dbProceso.listar();
+        if(datosExtra != null)
+            // Los añade a listaProcesos
+            listaProcesos = datosExtra.getStringArrayList("Procesos");
 
-            for (int i = 0; i < listaProcesos.size(); i++) {
-                listaProcesosStr.add(listaProcesos.get(i).toString());
-            }
-
-            arrayAdapter = new ArrayAdapter<String>(ProcesosActivity.this, android.R.layout.simple_list_item_1, listaProcesosStr);
-            procesosListView.setAdapter(arrayAdapter);
-        } catch (Exception e){
-            e.toString();
-        }
+        // Los añade a una lista en la Activity de procesos
+        arrayAdapter = new ArrayAdapter<String>(ProcesosActivity.this, android.R.layout.simple_list_item_1, listaProcesos);
+        procesosListView.setAdapter(arrayAdapter);
     }
 }

@@ -28,19 +28,17 @@ public class DaoProceso extends ProcesoDBHelper {
      * @params Proceso proceso
      * @return long id
      */
-    public int crear(Proceso proceso){
-        int id = 0;
+    public long crear(Proceso proceso){
+        long id = -1;
         try{
             ProcesoDBHelper dbHelper = new ProcesoDBHelper(context);
             SQLiteDatabase db = dbHelper.getWritableDatabase();
-
             ContentValues values = new ContentValues();
+
             values.put("tiempoDecoloracion",proceso.getTiempoDecoloracion());
             values.put("estado",proceso.getEstado());
-            id = (int)db.insert(TABLE_PROCESOS+"2",null,values);
-            Toast.makeText(this.context,"No Error",Toast.LENGTH_LONG).show();
+            id = db.insert(TABLE_PROCESOS,null,values);
         } catch (SQLException e){
-            Toast.makeText(this.context,"Error",Toast.LENGTH_LONG).show();
             e.toString();
         } finally {
             return id;
@@ -54,8 +52,14 @@ public class DaoProceso extends ProcesoDBHelper {
      */
     public Proceso buscar(int idProceso){
         Proceso p = new Proceso();
+        ArrayList<Proceso> listado = this.listar();
 
-        // Aqui ingresar el SQL para buscar 1 solo registro, con el id que se pasa como parametro
+        for(int i = 0; i < listado.size(); i++){
+            if(listado.get(i).getId() == idProceso){
+                p = listado.get(i);
+                break;
+            }
+        }
 
         return p;
     }
@@ -69,19 +73,21 @@ public class DaoProceso extends ProcesoDBHelper {
 
         ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String[] columnas = new String[3];
-        columnas[0] = "id";
-        columnas[1] = "tiempoDecoloracion";
-        columnas[2] = "estado";
 
         Cursor cursor = db.rawQuery("SELECT * FROM "+TABLE_PROCESOS,null);
-        if(cursor.moveToFirst()){
-            do {
-                a.add(new Proceso(cursor.getInt(0),cursor.getInt(1),cursor.getString(0)));
-            }while(cursor.moveToNext());
+        try{
+            if(cursor.moveToFirst()){
+                do {
+                    a.add(new Proceso(cursor.getInt(0),cursor.getInt(1),
+                            cursor.getString(2)));
+                }while(cursor.moveToNext());
+            }
+        } catch (Exception e){
+            e.toString();
+        } finally {
+            return a;
         }
 
-        return a;
     }
 
     /**
