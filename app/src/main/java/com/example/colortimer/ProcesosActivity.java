@@ -5,19 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.colortimer.DAO.DaoProceso;
 import com.example.colortimer.Datos.Proceso;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class ProcesosActivity extends AppCompatActivity {
     private ArrayAdapter<String> arrayAdapter;
     private ListView procesosListView;
     private List<String> listaProcesosStr;
-    private List<Proceso> listaProcesos;
+    private ArrayList<Proceso> listaProcesos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +27,11 @@ public class ProcesosActivity extends AppCompatActivity {
         listaProcesos = new ArrayList<>();
         listaProcesosStr = new ArrayList<>();
         DaoProceso dbProceso = new DaoProceso(ProcesosActivity.this);
+        try {
+            listaProcesos = dbProceso.listar();
+            Toast.makeText(this, listaProcesos.size(), Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+        }
 
         /*try {
             listaProcesos = dbProceso.listar();

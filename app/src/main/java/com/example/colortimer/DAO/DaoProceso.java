@@ -38,7 +38,7 @@ public class DaoProceso extends ProcesoDBHelper {
             values.put("tiempoDecoloracion",proceso.getTiempoDecoloracion());
             values.put("estado",proceso.getEstado());
             id = db.insert(TABLE_PROCESOS,null,values);
-            db.close();
+           // db.close();
         } catch (SQLException e){
             e.toString();
         } finally {
@@ -53,14 +53,14 @@ public class DaoProceso extends ProcesoDBHelper {
      */
     public Proceso buscar(int idProceso){
         Proceso p = new Proceso();
-        ArrayList<Proceso> listado = this.listar();
+        /*ArrayList<Proceso> listado = this.listar();
 
         for(int i = 0; i < listado.size(); i++){
             if(listado.get(i).getId() == idProceso){
                 p = listado.get(i);
                 break;
             }
-        }
+        }*/
 
         return p;
     }
@@ -70,17 +70,15 @@ public class DaoProceso extends ProcesoDBHelper {
      * @return ArrayList<Proceso> a
      */
     public ArrayList<Proceso> listar(){
-        ArrayList<Proceso> a = new ArrayList<Proceso>();
+        ArrayList<Proceso> a = new ArrayList<>();
         ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "+TABLE_PROCESOS,null);
 
-        db.close();
         try{
             if(cursor.moveToFirst()){
                 do {
-                    a.add(new Proceso(cursor.getInt(0),cursor.getInt(1),
-                            cursor.getString(2)));
+                    a.add(new Proceso(cursor.getInt(0),cursor.getInt(1),cursor.getString(2)));
                 }while(cursor.moveToNext());
             }
         } catch (Exception e){
@@ -98,14 +96,14 @@ public class DaoProceso extends ProcesoDBHelper {
      * @return boolean actualizado
      */
     public void actualizar(Proceso proceso){
-        ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
+        /*ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         if(db != null){
             db.execSQL("UPDATE "+TABLE_PROCESOS+" tiempoDecoloracion='" +
                     proceso.getTiempoDecoloracion()+"',estado='"+proceso.getEstado()+"'");
             db.close();
-        }
+        }*/
     }
 
     /**
@@ -115,12 +113,12 @@ public class DaoProceso extends ProcesoDBHelper {
      * @return boolean borrado
      */
     public void borrar(int idProceso){
-        ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
+        /*ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         if(db != null){
             db.execSQL("DELETE FROM "+TABLE_PROCESOS+" WHERE id='"+idProceso+"'");
             db.close();
-        }
+        }*/
     }
 }

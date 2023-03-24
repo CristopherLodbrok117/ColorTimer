@@ -22,7 +22,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,20 +29,17 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 1;
     private String currentPhotoPath;
     private ImageView img;
-    private Button btnProcesos;
     private DaoProceso dbProceso;
-
-
+    static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         img = findViewById(R.id.imageView);
-        btnProcesos = findViewById(R.id.btnProcesos);
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(MainActivity.this,  android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     android.Manifest.permission.CAMERA
@@ -53,9 +49,8 @@ public class MainActivity extends AppCompatActivity {
         dbProceso = new DaoProceso(MainActivity.this);
         Proceso p = new Proceso();
         p.setId((int) dbProceso.crear(p));
-        Toast.makeText(MainActivity.this,"A",Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this,"ID: "+p.getId(),Toast.LENGTH_SHORT).show();
     }
-
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -93,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -104,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void abreProcesosActivity(View view){
-        Intent aProcesos = new Intent(this,ProcesosActivity.class);
+        Intent aProcesos = new Intent(MainActivity.this,ProcesosActivity.class);
         startActivity(aProcesos);
     }
 }
