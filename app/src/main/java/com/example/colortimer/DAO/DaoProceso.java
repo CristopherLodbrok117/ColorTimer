@@ -113,12 +113,13 @@ public class DaoProceso extends ProcesoDBHelper {
      * @return boolean borrado
      */
     public void borrar(int idProceso){
-        /*ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
+        Toast.makeText(context, "Borrando: "+idProceso, Toast.LENGTH_SHORT).show();
+        ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         if(db != null){
             db.execSQL("DELETE FROM "+TABLE_PROCESOS+" WHERE id='"+idProceso+"'");
             db.close();
-        }*/
+        }
     }
 }

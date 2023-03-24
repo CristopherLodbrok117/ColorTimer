@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 1;
     private String currentPhotoPath;
     private ImageView img;
+    private Button btnProcesos;
     private DaoProceso dbProceso;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         img = findViewById(R.id.imageView);
+        btnProcesos = findViewById(R.id.button2);
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -98,7 +100,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void abreProcesosActivity(View view){
-        Intent aProcesos = new Intent(MainActivity.this,ProcesosActivity.class);
-        startActivity(aProcesos);
+        try{
+            Intent aProcesos = new Intent(MainActivity.this,ProcesosActivity.class);
+            startActivity(aProcesos);
+        } catch (Exception e){
+            Toast.makeText(MainActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+        }
     }
 }
