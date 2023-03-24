@@ -16,6 +16,7 @@ public class DaoColor {
      */
     public boolean crear(Color color){
         // Aqui ingresar el SQL para crear el registro del Proceso en la base de datos
+        return true;
     }
 
     /**
@@ -51,6 +52,7 @@ public class DaoColor {
      */
     public boolean actualizar(Color color){
         // Aqui agregar el SQL para actualizar un registro
+        return true;
     }
 
     /**
@@ -61,5 +63,6 @@ public class DaoColor {
      */
     public boolean borrar(int idColor){
         // Aqui agregar el SQL para eliminar un registro
+        return true;
     }
 }

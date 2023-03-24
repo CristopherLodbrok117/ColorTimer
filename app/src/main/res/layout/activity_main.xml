@@ -33,4 +33,15 @@
         app:srcCompat="@drawable/camara"
         tools:ignore="DuplicateSpeakableTextCheck" />
 
+    <Button
+        android:id="@+id/btnProcesos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="abreProcesosActivity"
+        android:text="Procesos"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

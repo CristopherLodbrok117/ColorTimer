@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import com.example.colortimer.DAO.DaoProceso;
+import com.example.colortimer.Datos.Proceso;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,7 +14,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,24 +26,34 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS= 7;
+    static final int REQUEST_TAKE_PHOTO = 1;
+    private String currentPhotoPath;
     private ImageView img;
+    private Button btnProcesos;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        img = (ImageView) findViewById(R.id.imageView);
+        btnProcesos = (Button) findViewById(R.id.btnProcesos);
 
-        img = (ImageView)findViewById(R.id.imageView);
-
-        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this,  android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{ android.Manifest.permission.WRITE_EXTERNAL_STORAGE,  android.Manifest.permission.CAMERA}, 1000);
+        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(MainActivity.this,  android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.CAMERA
+            }, 1000);
         }
 
-
+        DaoProceso dbProceso = new DaoProceso(MainActivity.this);
+        Proceso p = new Proceso();
+        Toast.makeText(MainActivity.this,"Id: "+p.getEstado(),Toast.LENGTH_LONG).show();
+        p.setId(dbProceso.crear(p));
     }
 
-    String currentPhotoPath;
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -54,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
-
-    static final int REQUEST_TAKE_PHOTO = 1;
     private void dispatchTakePictureIntent() { //Metodo para tomar fotografias
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -78,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
     static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -88,5 +100,9 @@ public class MainActivity extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             img.setImageBitmap(imageBitmap);
         }
+    }
+    public void abreProcesosActivity(View view){
+        Intent aProcesos = new Intent(this,ProcesosActivity.class);
+        startActivity(aProcesos);
     }
 }

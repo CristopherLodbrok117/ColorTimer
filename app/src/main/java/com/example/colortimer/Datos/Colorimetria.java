@@ -1,3 +1,5 @@
+package com.example.colortimer.Datos;
+
 import java.util.Random;
 
 public class Colorimetria {
