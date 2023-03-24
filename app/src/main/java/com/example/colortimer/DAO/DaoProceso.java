@@ -38,6 +38,7 @@ public class DaoProceso extends ProcesoDBHelper {
             values.put("tiempoDecoloracion",proceso.getTiempoDecoloracion());
             values.put("estado",proceso.getEstado());
             id = db.insert(TABLE_PROCESOS,null,values);
+            db.close();
         } catch (SQLException e){
             e.toString();
         } finally {
@@ -70,11 +71,11 @@ public class DaoProceso extends ProcesoDBHelper {
      */
     public ArrayList<Proceso> listar(){
         ArrayList<Proceso> a = new ArrayList<Proceso>();
-
         ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-
         Cursor cursor = db.rawQuery("SELECT * FROM "+TABLE_PROCESOS,null);
+
+        db.close();
         try{
             if(cursor.moveToFirst()){
                 do {
@@ -96,9 +97,15 @@ public class DaoProceso extends ProcesoDBHelper {
      * @params Proceso proceso
      * @return boolean actualizado
      */
-    public boolean actualizar(Proceso proceso){
-        // Aqui agregar el SQL para actualizar un registro
-        return true;
+    public void actualizar(Proceso proceso){
+        ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        if(db != null){
+            db.execSQL("UPDATE "+TABLE_PROCESOS+" tiempoDecoloracion='" +
+                    proceso.getTiempoDecoloracion()+"',estado='"+proceso.getEstado()+"'");
+            db.close();
+        }
     }
 
     /**
@@ -107,8 +114,13 @@ public class DaoProceso extends ProcesoDBHelper {
      * @params int idProceso
      * @return boolean borrado
      */
-    public boolean borrar(int idProceso){
-        // Aqui agregar el SQL para eliminar un registro
-        return true;
+    public void borrar(int idProceso){
+        ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        if(db != null){
+            db.execSQL("DELETE FROM "+TABLE_PROCESOS+" WHERE id='"+idProceso+"'");
+            db.close();
+        }
     }
 }

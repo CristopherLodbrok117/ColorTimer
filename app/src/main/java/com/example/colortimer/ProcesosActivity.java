@@ -6,29 +6,40 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.colortimer.DAO.DaoProceso;
+import com.example.colortimer.Datos.Proceso;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class ProcesosActivity extends AppCompatActivity {
     private ArrayAdapter<String> arrayAdapter;
     private ListView procesosListView;
-    private List<String> listaProcesos;
+    private List<String> listaProcesosStr;
+    private List<Proceso> listaProcesos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_procesos);
-        procesosListView = (ListView) findViewById(R.id.listaProcesos);
+        procesosListView = findViewById(R.id.listaProcesos);
         listaProcesos = new ArrayList<>();
-        // Toma los datos extra que se envian, en este caso, datos de los procesos
-        Bundle datosExtra = getIntent().getExtras();
+        listaProcesosStr = new ArrayList<>();
+        DaoProceso dbProceso = new DaoProceso(ProcesosActivity.this);
 
-        if(datosExtra != null)
-            // Los añade a listaProcesos
-            listaProcesos = datosExtra.getStringArrayList("Procesos");
+        /*try {
+            listaProcesos = dbProceso.listar();
 
-        // Los añade a una lista en la Activity de procesos
-        arrayAdapter = new ArrayAdapter<String>(ProcesosActivity.this, android.R.layout.simple_list_item_1, listaProcesos);
-        procesosListView.setAdapter(arrayAdapter);
+            for (int i = 0; i < listaProcesos.size(); i++) {
+                listaProcesosStr.add(listaProcesos.get(i).toString());
+            }
+
+            arrayAdapter = new ArrayAdapter<>(ProcesosActivity.this,
+                    android.R.layout.simple_list_item_1, listaProcesosStr);
+            procesosListView.setAdapter(arrayAdapter);
+        } catch (Exception e){
+            e.toString();
+        }*/
     }
 }

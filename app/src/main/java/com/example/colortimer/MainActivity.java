@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        img = (ImageView) findViewById(R.id.imageView);
-        btnProcesos = (Button) findViewById(R.id.btnProcesos);
+        img = findViewById(R.id.imageView);
+        btnProcesos = findViewById(R.id.btnProcesos);
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(MainActivity.this,  android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         dbProceso = new DaoProceso(MainActivity.this);
         Proceso p = new Proceso();
         p.setId((int) dbProceso.crear(p));
+        Toast.makeText(MainActivity.this,"A",Toast.LENGTH_SHORT).show();
     }
 
     private File createImageFile() throws IOException {
@@ -104,16 +105,6 @@ public class MainActivity extends AppCompatActivity {
     }
     public void abreProcesosActivity(View view){
         Intent aProcesos = new Intent(this,ProcesosActivity.class);
-        Bundle datos = new Bundle();
-        ArrayList<Proceso> procesos = dbProceso.listar();
-        ArrayList<String> procesosStr = new ArrayList<>();
-
-        for(int i = 0; i < procesos.size(); i++){
-            procesosStr.add(procesos.get(i).toString());
-        }
-
-        datos.putStringArrayList("Procesos",procesosStr);
-        aProcesos.putExtras(datos);
         startActivity(aProcesos);
     }
 }
