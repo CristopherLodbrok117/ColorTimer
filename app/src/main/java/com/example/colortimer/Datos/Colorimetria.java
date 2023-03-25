@@ -1,5 +1,8 @@
 package com.example.colortimer.Datos;
 
+import com.example.colortimer.DAO.DaoColor;
+import com.example.colortimer.MainActivity;
+
 import java.util.Random;
 public class Colorimetria {
 	private Color colorInicial;
@@ -17,29 +20,41 @@ public class Colorimetria {
 	
 	/* Constructor copia
 	 * Con este constructor podemos inicializar cada color a partir de
-	 * 3 objetos de tipo color recibidos*/
-	public Colorimetria(Color i, Color a, Color d) { 
-		this.colorInicial = i;
-		this.colorActual = a;
-		this.colorDeseado = d;
+	 * 3 objetos de tipo color recibidos
+	 * @param String inicial	| Color con el que comenzo el proceso
+	 * @param String actual		| Color actual del proceso
+	 * @param String destino	| Color al que se espera llegar
+	 */
+	public Colorimetria(Color inicial, Color actual, Color destino) {
+		this.colorInicial = inicial;
+		this.colorActual = actual;
+		this.colorDeseado = destino;
 	}
 	
 	/* Constructor parametrizado
 	 * Con este constructor podemos inicializar cada color a partir de
-	 * el valor decimal de cada uno*/
-	public Colorimetria(int i, int a, int d) { 
-		this.colorInicial = new Color(i);
-		this.colorActual = new Color(a);
-		this.colorDeseado = new Color(d);
+	 * el valor decimal de cada uno
+	 * @param String inicial	| Color con el que comenzo el proceso
+	 * @param String actual		| Color actual del proceso
+	 * @param String destino	| Color al que se espera llegar
+	 */
+	public Colorimetria(int inicial, int actual, int destino) {
+		this.colorInicial = new Color(inicial);
+		this.colorActual = new Color(actual);
+		this.colorDeseado = new Color(destino);
 	}
 	
 	/* Constructor parametrizado
 	 * Con este constructor podemos inicializar cada color a partir de
-	 * el valor decimal de cada uno*/
-	public Colorimetria(String i, String a, String d) { 
-		this.colorInicial = new Color(i);
-		this.colorActual = new Color(a);
-		this.colorDeseado = new Color(d);
+	 * el valor decimal de cada uno
+	 * @param String inicial	| Color con el que comenzo el proceso
+	 * @param String actual		| Color actual del proceso
+	 * @param String destino	| Color al que se espera llegar
+	 */
+	public Colorimetria(String inicial, String actual, String destino) {
+		this.colorInicial = new Color(inicial);
+		this.colorActual = new Color(actual);
+		this.colorDeseado = new Color(destino);
 	}
 	
 	public Color getColorInicial() {
