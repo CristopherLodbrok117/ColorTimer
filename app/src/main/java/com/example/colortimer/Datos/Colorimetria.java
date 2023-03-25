@@ -1,8 +1,5 @@
 package com.example.colortimer.Datos;
 
-import com.example.colortimer.DAO.DaoColor;
-import com.example.colortimer.MainActivity;
-
 import java.util.Random;
 public class Colorimetria {
 	private Color colorInicial;
