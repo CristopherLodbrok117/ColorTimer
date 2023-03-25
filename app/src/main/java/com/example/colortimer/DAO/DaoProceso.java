@@ -9,10 +9,10 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.colortimer.DAO.helpers.ProcesoDBHelper;
 import com.example.colortimer.Datos.Proceso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DaoProceso extends ProcesoDBHelper {
 
@@ -38,7 +38,7 @@ public class DaoProceso extends ProcesoDBHelper {
             values.put("tiempoDecoloracion",proceso.getTiempoDecoloracion());
             values.put("estado",proceso.getEstado());
             id = db.insert(TABLE_PROCESOS,null,values);
-           // db.close();
+            db.close();
         } catch (SQLException e){
             e.toString();
         } finally {
@@ -53,14 +53,14 @@ public class DaoProceso extends ProcesoDBHelper {
      */
     public Proceso buscar(int idProceso){
         Proceso p = new Proceso();
-        /*ArrayList<Proceso> listado = this.listar();
+        ArrayList<Proceso> listado = this.listar();
 
         for(int i = 0; i < listado.size(); i++){
             if(listado.get(i).getId() == idProceso){
                 p = listado.get(i);
                 break;
             }
-        }*/
+        }
 
         return p;
     }
@@ -96,14 +96,14 @@ public class DaoProceso extends ProcesoDBHelper {
      * @return boolean actualizado
      */
     public void actualizar(Proceso proceso){
-        /*ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
+        ProcesoDBHelper dbHelper = new ProcesoDBHelper(this.context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         if(db != null){
-            db.execSQL("UPDATE "+TABLE_PROCESOS+" tiempoDecoloracion='" +
+            db.execSQL("UPDATE "+TABLE_PROCESOS+" SET tiempoDecoloracion='" +
                     proceso.getTiempoDecoloracion()+"',estado='"+proceso.getEstado()+"'");
             db.close();
-        }*/
+        }
     }
 
     /**

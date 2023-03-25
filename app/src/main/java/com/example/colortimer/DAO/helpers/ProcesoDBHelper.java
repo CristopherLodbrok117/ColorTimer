@@ -1,4 +1,4 @@
-package com.example.colortimer.DAO;
+package com.example.colortimer.DAO.helpers;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,10 +18,12 @@ public class ProcesoDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(
-                "CREATE TABLE IF NOT EXISTS "+TABLE_PROCESOS+"(" +
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "tiempoDecoloracion INTEGER," +
-                        "estado VARCHAR(1))"
+            "CREATE TABLE IF NOT EXISTS "+TABLE_PROCESOS+"(" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "tiempoDecoloracion INTEGER," +
+                "estado VARCHAR(1)," +
+                "idtinte INTEGER REFERENCES Tintes(id) DEFAULT NULL" +
+            ")"
         );
     }
 
