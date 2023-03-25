@@ -1,7 +1,6 @@
 package com.example.colortimer.Datos;
 
 import java.util.Random;
-
 public class Colorimetria {
 	private Color colorInicial;
 	private Color colorActual;

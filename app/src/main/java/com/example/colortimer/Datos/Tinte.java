@@ -5,6 +5,11 @@ public class Tinte {
     private String marca;
 
     public Tinte(){
+        this(0,"");
+    }
+    public Tinte(int id,String marca){
+        this.id = id;
+        this.marca = marca;
     }
 
     public void setId(int id){

@@ -1,7 +1,6 @@
 package com.example.colortimer.DAO.helpers;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 

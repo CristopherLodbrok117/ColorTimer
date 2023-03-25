@@ -1,7 +1,5 @@
 package com.example.colortimer.Datos;
 
-import androidx.annotation.NonNull;
-
 public class Proceso {
     private int id;
     private int tiempoDecoloracion;
@@ -36,7 +34,6 @@ public class Proceso {
         return estado;
     }
 
-    @NonNull
     @Override
     public String toString() {
         String s = "";

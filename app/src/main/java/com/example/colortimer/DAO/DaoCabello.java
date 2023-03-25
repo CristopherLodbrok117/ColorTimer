@@ -96,6 +96,14 @@ public class DaoCabello extends CabelloDBHelper{
      */
     public void actualizar(Cabello cabello){
         CabelloDBHelper dbHelper = new CabelloDBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        if(db != null){
+            db.execSQL("UPDATE "+TABLE_CABELLOS+" SET estado='"+cabello.getEstado()+"'," +
+                    "tipo='"+cabello.getTipo()+"',idproceso='"+cabello.getProceso()+"'," +
+                    "idcolor='"+cabello.getColor()+"'");
+            db.close();
+        }
     }
 
     /**
@@ -104,8 +112,13 @@ public class DaoCabello extends CabelloDBHelper{
      * @params int idCabello
      * @return boolean borrado
      */
-    public boolean borrar(int idCabello){
-        // Aqui agregar el SQL para eliminar un registro
-        return true;
+    public void borrar(int idCabello){
+        CabelloDBHelper dbHelper = new CabelloDBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        if(db != null){
+            db.execSQL("DELETE FROM "+TABLE_CABELLOS+" WHERE id='"+idCabello+"'");
+            db.close();
+        }
     }
 }

@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+
+import com.example.colortimer.DAO.DaoCabello;
+import com.example.colortimer.DAO.DaoColor;
 import com.example.colortimer.DAO.DaoProceso;
+import com.example.colortimer.DAO.DaoTinte;
 import com.example.colortimer.Datos.Proceso;
 
 import android.content.Intent;
@@ -27,11 +31,15 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS= 7;
     static final int REQUEST_TAKE_PHOTO = 1;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
     private String currentPhotoPath;
     private ImageView img;
     private Button btnProcesos;
+    private DaoCabello dbCabello;
+    private DaoColor dbColor;
     private DaoProceso dbProceso;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private DaoTinte dbTinte;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         img = findViewById(R.id.imageView);
         btnProcesos = findViewById(R.id.button2);
+        dbColor = new DaoColor(this);
+        dbTinte = new DaoTinte(this);
+        dbProceso = new DaoProceso(this);
+        dbCabello = new DaoCabello(this);
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -48,10 +60,9 @@ public class MainActivity extends AppCompatActivity {
             }, 1000);
         }
 
-        dbProceso = new DaoProceso(MainActivity.this);
-        Proceso p = new Proceso();
+        /*Proceso p = new Proceso();
         p.setId((int) dbProceso.crear(p));
-        Toast.makeText(MainActivity.this,"ID: "+p.getId(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this,"ID: "+p.getId(),Toast.LENGTH_SHORT).show();*/
     }
     private File createImageFile() throws IOException {
         // Create an image file name

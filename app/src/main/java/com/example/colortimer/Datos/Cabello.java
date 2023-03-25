@@ -1,8 +1,5 @@
 package com.example.colortimer.Datos;
 
-import com.example.colortimer.DAO.helpers.CabelloDBHelper;
-import com.example.colortimer.DAO.helpers.ColorDBHelper;
-
 public class Cabello {
     private int id;
     private String tipo;
