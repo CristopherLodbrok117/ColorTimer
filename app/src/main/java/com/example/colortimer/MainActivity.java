@@ -38,9 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private String currentPhotoPath;
-    private ImageView img;
+    //private ImageView img;
     private Button btnProcesos;
 
+    public ImageView img;
     private Button btn;
 
     private DaoCabello dbCabello;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        img = findViewById(R.id.iv_image);
         btn = findViewById(R.id.btn_camera);
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -75,17 +77,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.Manifest.permission.CAMERA
-            }, 1000);
-        }
-
-
-        img = findViewById(R.id.iv_image);
-
 
         btnProcesos = findViewById(R.id.button2);
         dbColor = new DaoColor(this);
@@ -99,7 +90,13 @@ public class MainActivity extends AppCompatActivity {
         p.setId((int) dbProceso.crear(p));
         Toast.makeText(MainActivity.this,"ID: "+p.getId(),Toast.LENGTH_SHORT).show();
 
-
+        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.CAMERA
+            }, 1000);
+        }
 
         */
     }
@@ -123,12 +120,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == Activity.RESULT_OK){
+        //if(requestCode == Activity.RESULT_OK){
             if(requestCode == CAMERA_REQUEST_CODE){
-                Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
                 img.setImageBitmap(imageBitmap);
             }
-        }
+        //}
     }
+
+
 }
