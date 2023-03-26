@@ -136,6 +136,22 @@ public class MainActivity extends AppCompatActivity {
                 bitmap para "dibujarlo" en el imageview.
                 Se puede modificar esto para variar el como manejar la informacion de la foto
                  */
+
+
+                /*
+                Si queremos mandar la informacion de esta foto podriamos usar algo como:
+
+                Intent i = new Intent(CurrentActivity.this, NewActivity.class);
+                i.putExtra("key",data); //la variable data de aqui xd
+                startActivity(i);
+
+                En la otra actividad seria:
+                Bundle extras = getIntent().getExtras();
+                if (extras != null) {
+                    Datatype variable = extras.get("key");
+                    //La llave debe de coincidir con la que declaramo
+                }
+                 */
             }
 
     }
