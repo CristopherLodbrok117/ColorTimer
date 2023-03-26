@@ -67,8 +67,7 @@ public class Temporizador {
             }
         };
 
-        //reloj.schedule(tarea, INICIO_INMEDIATO, tiempoNotificacionMin);
-        reloj.schedule(tarea, INICIO_INMEDIATO, 5000);
+        reloj.schedule(tarea, INICIO_INMEDIATO, tiempoNotificacionMin);
     }
 
     public void crearCanalNotificacion(Context context){
