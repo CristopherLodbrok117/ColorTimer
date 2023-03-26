@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.colortimer.DAO.DaoProceso;
 import com.example.colortimer.Datos.Proceso;
+import com.example.colortimer.Datos.Temporizador;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class ProcesosActivity extends AppCompatActivity {
     private List<String> listaProcesosStr;
     private List<Proceso> listaProcesos;
 
+    private Temporizador nzcth_800;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,21 @@ public class ProcesosActivity extends AppCompatActivity {
         } catch (Exception e){
             Toast.makeText(this, "Error al leer la Base de Datos",
                     Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void iniciarNZCTH800(){
+        nzcth_800 = new Temporizador();
+        nzcth_800.setNombreDecoloracion("Cliente 1");
+
+        nzcth_800.iniciarReloj(this); // Requiero pasarle una referencia de ProcesosActivity
+    }
+
+    public void detenerNZCTH800(){
+        try {
+            nzcth_800.pararReloj();
+        }catch(NullPointerException ex){
+            Toast.makeText(this, "No se ha iniciado el temporizador", Toast.LENGTH_LONG).show();
         }
     }
 }
