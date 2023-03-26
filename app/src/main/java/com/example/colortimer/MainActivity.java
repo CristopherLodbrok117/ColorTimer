@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
     //private ImageView img;
     private Button btnProcesos;
 
-    public ImageView img;
-    private Button btn;
+    public ImageView img; //Para mostrar la fotografia NO ES NECESARIO CONSERVAR, solo es para mostrar funcionamiento
+    private Button photo_btn;  //Boton para tomar fotografia
 
     private DaoCabello dbCabello;
     private DaoColor dbColor;
@@ -59,19 +59,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        img = findViewById(R.id.iv_image);
-        btn = findViewById(R.id.btn_camera);
-        btn.setOnClickListener(new View.OnClickListener(){
+        img = findViewById(R.id.iv_image);  //Asociamos la variable con la vista relacionada en el .xml
+        photo_btn = findViewById(R.id.btn_camera); //Basarnos en el id que le pongamos a cada vista
+        photo_btn.setOnClickListener(new View.OnClickListener(){ //Modificamos el qué hace ese boton cuando hacemos click
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) { //Primero comprobamos si los permisos que solicitamos (Camara) ya fue otorgado
                 if (ContextCompat.checkSelfPermission(
                         view.getContext(),
                         android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(intent, CAMERA_REQUEST_CODE);
+                    /*
+                    El intent es muy... flexible. En este caso intentamos crear una actividad de capturar imagen
+                    Despues de eso iniciamos la usamos startActivityForResult porque queremos obtener un resultado de la actividad (La foto/data)
+
+                     */
                 } else {
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{android.Manifest.permission.CAMERA},
+                    ActivityCompat.requestPermissions(MainActivity.this, //Si no tiene permisos entonces los solicita
+                            new String[]{android.Manifest.permission.CAMERA},  //Nos sale la notificacion solicitandolos
                             CAMERA_PERMISION_CODE);
                 }
             }
@@ -104,7 +109,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        /* Bueno, esto no hace mucho, solamente solicitar los permisos de la camara
 
+         */
         if(requestCode == CAMERA_PERMISION_CODE){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -120,13 +127,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //if(requestCode == Activity.RESULT_OK){
             if(requestCode == CAMERA_REQUEST_CODE){
                 Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
                 img.setImageBitmap(imageBitmap);
+
+                /*
+                data representa a la imagen propiamente dicho, en este caso lo casteamos a
+                bitmap para "dibujarlo" en el imageview.
+                Se puede modificar esto para variar el como manejar la informacion de la foto
+                 */
             }
-        //}
+
     }
-
-
 }
