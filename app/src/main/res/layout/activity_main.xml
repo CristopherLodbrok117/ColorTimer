@@ -12,32 +12,47 @@
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
         android:onClick="abreProcesosActivity"
         android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.924"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btn_camera"
         android:layout_width="176dp"
         android:layout_height="78dp"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="20dp"
         android:text="FOTOGRAFIAR"
         app:backgroundTint="#131313"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_image" />
 
     <ImageView
         android:id="@+id/iv_image"
-        android:layout_width="187dp"
-        android:layout_height="295dp"
-        android:layout_marginTop="52dp"
+        android:layout_width="282dp"
+        android:layout_height="385dp"
+        android:layout_marginTop="120dp"
         app:barrierMargin="@dimen/fab_margin"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_launcher_foreground" />
+
+    <Button
+        android:id="@+id/btn_suggestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:text="Mostrar Sugerencias"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintHorizontal_bias="0.346"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

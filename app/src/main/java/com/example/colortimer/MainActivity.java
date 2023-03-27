@@ -40,9 +40,12 @@ public class MainActivity extends AppCompatActivity {
     private String currentPhotoPath;
     //private ImageView img;
     private Button btnProcesos;
+    private Button btnSuggestion;
 
     public ImageView img; //Para mostrar la fotografia NO ES NECESARIO CONSERVAR, solo es para mostrar funcionamiento
     private Button photo_btn;  //Boton para tomar fotografia
+
+    private boolean photoHasBeenTaken = false;
 
     private DaoCabello dbCabello;
     private DaoColor dbColor;
@@ -61,6 +64,20 @@ public class MainActivity extends AppCompatActivity {
 
         img = findViewById(R.id.iv_image);  //Asociamos la variable con la vista relacionada en el .xml
         photo_btn = findViewById(R.id.btn_camera); //Basarnos en el id que le pongamos a cada vista
+        btnSuggestion= findViewById(R.id.btn_suggestion);
+        btnSuggestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(photoHasBeenTaken == false){
+                    //Mostrar alerta de que no se ha tomado una foto aún.
+                } else{
+                    Intent secondActivityIntent = new Intent(getApplicationContext(), SuggestionActivity.class);
+                    startActivity(secondActivityIntent);
+                }
+            }
+        });
+
+
         photo_btn.setOnClickListener(new View.OnClickListener(){ //Modificamos el qué hace ese boton cuando hacemos click
             @Override
             public void onClick(View view) { //Primero comprobamos si los permisos que solicitamos (Camara) ya fue otorgado
@@ -80,7 +97,14 @@ public class MainActivity extends AppCompatActivity {
                             CAMERA_PERMISION_CODE);
                 }
             }
+
+
+
+
+
+
         });
+
 
 
         btnProcesos = findViewById(R.id.button2);
@@ -106,6 +130,10 @@ public class MainActivity extends AppCompatActivity {
         */
     }
 
+
+
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -130,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
             if(requestCode == CAMERA_REQUEST_CODE){
                 Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
                 img.setImageBitmap(imageBitmap);
-
+                photoHasBeenTaken = true;
                 /*
                 data representa a la imagen propiamente dicho, en este caso lo casteamos a
                 bitmap para "dibujarlo" en el imageview.
@@ -152,6 +180,10 @@ public class MainActivity extends AppCompatActivity {
                     //La llave debe de coincidir con la que declaramo
                 }
                  */
+
+                //Enviando la información de la foto a otra actividad. En este caso Suggestion para Suggestion.
+                Intent intent = new Intent(this, SuggestionActivity.class);
+                intent.putExtra("bmp_Image", data);
             }
 
     }
