@@ -5,38 +5,44 @@
     android:id="@+id/t"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#1F2323"
     tools:context=".DecoloracionActivity">
 
     <TextView
         android:id="@+id/tv_titulo"
-        android:layout_width="113dp"
-        android:layout_height="30dp"
+        android:layout_width="136dp"
+        android:layout_height="35dp"
         android:layout_marginStart="112dp"
         android:layout_marginLeft="112dp"
         android:layout_marginTop="40dp"
         android:text="@string/tv_titulo"
-        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/txt_nombre"
-        android:layout_width="214dp"
-        android:layout_height="49dp"
+        android:layout_width="245dp"
+        android:layout_height="51dp"
         android:ems="10"
         android:hint="Escriba el nombre del cliente"
         android:inputType="textPersonName"
+        android:textColor="#E9ABFDE7"
+        android:textColorHint="#8EDFED"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="94dp" />
 
     <TextView
         android:id="@+id/tv_id"
-        android:layout_width="31dp"
-        android:layout_height="23dp"
+        android:layout_width="45dp"
+        android:layout_height="32dp"
         android:layout_marginTop="40dp"
         android:text="ID"
-        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toEndOf="@+id/tv_titulo"
@@ -54,40 +60,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"
-        android:text="TextView"
+        android:text="@string/tv_update"
+        android:textColor="#84FFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/spn_tipo_cabello"
-        tools:layout_editor_absoluteX="176dp" />
+        tools:layout_editor_absoluteX="140dp" />
 
     <ImageView
         android:id="@+id/img_inicial"
         android:layout_width="93dp"
         android:layout_height="110dp"
-        android:foreground="@color/black"
+        android:background="#000000"
+        android:foreground="#00000000"
         android:rotationX="41"
         app:layout_constraintEnd_toStartOf="@+id/img_actual"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/arrow_up_float"
+        app:srcCompat="@drawable/face_117"
         tools:layout_editor_absoluteY="373dp" />
 
     <ImageView
         android:id="@+id/img_final"
         android:layout_width="93dp"
         android:layout_height="110dp"
-        android:foreground="@color/black"
+        android:background="#000000"
+        android:foreground="#00000000"
         android:rotationX="41"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/img_actual"
-        app:srcCompat="@android:drawable/arrow_up_float"
+        app:srcCompat="@drawable/face_117"
         tools:layout_editor_absoluteY="373dp" />
 
     <ImageView
         android:id="@+id/img_actual"
         android:layout_width="93dp"
         android:layout_height="110dp"
-        android:foreground="@color/black"
+        android:background="#000000"
+        android:foreground="#00000000"
         android:rotationX="-41"
         app:layout_constraintTop_toBottomOf="@+id/tv_estado"
-        app:srcCompat="@android:drawable/arrow_up_float"
+        app:srcCompat="@drawable/face_117"
         tools:layout_editor_absoluteX="159dp" />
 
     <Button
@@ -97,40 +109,41 @@
         android:layout_marginBottom="20dp"
         android:text="@string/btn_iniciar"
         app:backgroundTint="#00B0FF"
-        app:icon="@android:drawable/btn_star_big_off"
+        app:icon="@drawable/comenzar_7"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="126dp" />
+        tools:layout_editor_absoluteX="130dp" />
 
     <Button
         android:id="@+id/btn_foto"
-        android:layout_width="155dp"
-        android:layout_height="131dp"
-        android:layout_marginBottom="16dp"
-        app:backgroundTint="#00E5FF"
-        app:icon="@drawable/camara"
+        android:layout_width="118dp"
+        android:layout_height="118dp"
+        android:layout_marginBottom="36dp"
+        app:backgroundTint="#0000E5FF"
+        app:icon="@drawable/camara_06"
         app:layout_constraintBottom_toTopOf="@+id/btn_iniciar"
-        tools:layout_editor_absoluteX="126dp" />
+        tools:layout_editor_absoluteX="146dp" />
 
     <ImageButton
         android:id="@+id/btn_terminar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="55dp"
+        android:layout_height="53dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:background="#00FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_lock_power_off"
-        tools:layout_editor_absoluteY="649dp" />
+        app:srcCompat="@drawable/stop_16"
+        tools:layout_editor_absoluteY="627dp" />
 
     <ImageButton
         android:id="@+id/btn_volver"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="58dp"
+        android:layout_height="44dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:rotationY="178"
+        android:background="#00FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_media_play"
-        tools:layout_editor_absoluteY="641dp" />
+        app:srcCompat="@drawable/volver_16"
+        tools:layout_editor_absoluteY="625dp" />
 
     <TextView
         android:id="@+id/tv_volver"
@@ -140,6 +153,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/tv_volver"
+        android:textColor="#84FFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_volver" />
 
@@ -147,7 +161,9 @@
         android:id="@+id/tv_terminar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/tv_terminar"
+        android:textColor="#84FFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_terminar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

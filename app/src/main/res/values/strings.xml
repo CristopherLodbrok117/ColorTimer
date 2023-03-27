@@ -12,6 +12,7 @@
 
     <!-- Strings de activity decoloracion -->
     <string name="tv_titulo">Decoloración:</string>
+    <string name="tv_update">Estado Actual:</string>
     <string name="btn_iniciar">Comenzar</string>
     <string name="tv_volver">Volver</string>
     <string name="tv_terminar">Terminar</string>
