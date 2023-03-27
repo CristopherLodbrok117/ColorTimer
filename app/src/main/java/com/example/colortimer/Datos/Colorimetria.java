@@ -2,17 +2,17 @@ package com.example.colortimer.Datos;
 
 import java.util.Random;
 public class Colorimetria {
-	private Color colorInicial;
-	private Color colorActual;
-	private Color colorDeseado;
+	private MyColor colorInicial;
+	private MyColor colorActual;
+	private MyColor colorDeseado;
 	
 	
 	/* Constructor base
 	 * Este constructor inicializa cada color con su constructor base*/
 	public Colorimetria () { 
-		this.colorInicial = new Color();
-		this.colorActual = new Color();
-		this.colorDeseado = new Color();
+		this.colorInicial = new MyColor();
+		this.colorActual = new MyColor();
+		this.colorDeseado = new MyColor();
 	}
 	
 	/* Constructor copia
@@ -22,10 +22,10 @@ public class Colorimetria {
 	 * @param String actual		| Color actual del proceso
 	 * @param String destino	| Color al que se espera llegar
 	 */
-	public Colorimetria(Color inicial, Color actual, Color destino) {
+	public Colorimetria(MyColor inicial, MyColor actual, MyColor deseado) {
 		this.colorInicial = inicial;
 		this.colorActual = actual;
-		this.colorDeseado = destino;
+		this.colorDeseado = deseado;
 	}
 	
 	/* Constructor parametrizado
@@ -36,9 +36,9 @@ public class Colorimetria {
 	 * @param String destino	| Color al que se espera llegar
 	 */
 	public Colorimetria(int inicial, int actual, int destino) {
-		this.colorInicial = new Color(inicial);
-		this.colorActual = new Color(actual);
-		this.colorDeseado = new Color(destino);
+		this.colorInicial = new MyColor(inicial);
+		this.colorActual = new MyColor(actual);
+		this.colorDeseado = new MyColor(destino);
 	}
 	
 	/* Constructor parametrizado
@@ -49,43 +49,43 @@ public class Colorimetria {
 	 * @param String destino	| Color al que se espera llegar
 	 */
 	public Colorimetria(String inicial, String actual, String destino) {
-		this.colorInicial = new Color(inicial);
-		this.colorActual = new Color(actual);
-		this.colorDeseado = new Color(destino);
+		this.colorInicial = new MyColor(inicial);
+		this.colorActual = new MyColor(actual);
+		this.colorDeseado = new MyColor(destino);
 	}
 	
-	public Color getColorInicial() {
+	public MyColor getColorInicial() {
 		return colorInicial;
 	}
 	
-	public void setColorInicial(Color colorInicial) {
+	public void setColorInicial(MyColor colorInicial) {
 		this.colorInicial = colorInicial;
 	}
 	
-	public Color getColorActual() {
+	public MyColor getColorActual() {
 		return colorActual;
 	}
 	
-	public void setColorActual(Color colorActual) {
+	public void setColorActual(MyColor colorActual) {
 		this.colorActual = colorActual;
 	}
 	
-	public Color getColorDeseado() {
+	public MyColor getColorDeseado() {
 		return colorDeseado;
 	}
 	
-	public void setColorDeseado(Color colorDeseado) {
+	public void setColorDeseado(MyColor colorDeseado) {
 		this.colorDeseado = colorDeseado;
 	}
 	
 	/*Regresa la diferencia entre el color actual y el color deseado*/
 	public int calcularDiferencia() {
-		return colorDeseado.getValor() - colorActual.getValor();
+		return colorActual.evaluarDiferencia(colorDeseado);
 	}
 	
 	/* Método estatico
 	 * Regresa la diferencia entre los dos colores recibidos*/
-	public static int calcularDiferencia(Color a, Color b) {
+	public static int calcularDiferencia(MyColor a, MyColor b) {
 		return a.getValor() - b.getValor();
 	}
 	

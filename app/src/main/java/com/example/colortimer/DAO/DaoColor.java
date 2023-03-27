@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.Nullable;
 
 import com.example.colortimer.DAO.helpers.ColorDBHelper;
-import com.example.colortimer.Datos.Color;
+import com.example.colortimer.Datos.MyColor;
 
 import java.util.ArrayList;
 
@@ -24,7 +24,7 @@ public class DaoColor extends ColorDBHelper {
      * @params Color color
      * @return boolean creado
      */
-    public long crear(Color color){
+    public long crear(MyColor color){
         long id = -1;
         try{
             ColorDBHelper dbHelper = new ColorDBHelper(context);
@@ -46,9 +46,9 @@ public class DaoColor extends ColorDBHelper {
      * @params int idColor
      * @return Color c
      */
-    public Color buscar(int idColor){
-        Color c = new Color();
-        ArrayList<Color> listado = this.listar();
+    public MyColor buscar(int idColor){
+        MyColor c = new MyColor();
+        ArrayList<MyColor> listado = this.listar();
 
         for(int i = 0; i < listado.size(); i++){
             if(listado.get(i).getId() == idColor){
@@ -64,8 +64,8 @@ public class DaoColor extends ColorDBHelper {
      * Listar (Read): Devuelve todos los registros de procesos
      * @return ArrayList<Color> a
      */
-    public ArrayList<Color> listar(){
-        ArrayList<Color> a = new ArrayList<Color>();
+    public ArrayList<MyColor> listar(){
+        ArrayList<MyColor> a = new ArrayList<MyColor>();
         ColorDBHelper dbHelper = new ColorDBHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "+TABLE_COLORES,null);
@@ -73,7 +73,7 @@ public class DaoColor extends ColorDBHelper {
         try {
             if(cursor.moveToFirst()){
                 do {
-                    a.add(new Color(cursor.getInt(0),cursor.getInt(1)));
+                    a.add(new MyColor(cursor.getInt(0),cursor.getInt(1)));
                 }while (cursor.moveToNext());
             }
         } catch (Exception e) {
@@ -89,7 +89,7 @@ public class DaoColor extends ColorDBHelper {
      * @params Color color
      * @return boolean actualizado
      */
-    public void actualizar(Color color){
+    public void actualizar(MyColor color){
         ColorDBHelper dbHelper = new ColorDBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 

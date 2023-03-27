@@ -1,104 +1,104 @@
-import java.awt.Color;
-import java.awt.image.BufferedImage;
+package com.example.colortimer.Datos;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.widget.ImageView;
+import android.widget.Toast;
+
 import java.io.File;
-import javax.imageio.ImageIO;
+
 
 /*AUN FALTAN PRUEBAS CON LA NUEVA MODIFICACIÖN DE LA CAMARA*/
-public class ExtractorColor { 
-    
-		
-		/*Este método extrae el color a partir del nombre del archivo recibido*/
-    public static void extraerColor(String imagenName) {
-    	try {
-            // Cargamos la imagen desde un archivo
-            File imagenFile = new File(imagenName);
-            BufferedImage imagen = ImageIO.read(imagenFile);
-            int color = extraerColorDominante(imagen);
-            
-            System.out.println("Color de la imagen: " + color);
-            System.out.println("Hexa: "+MyColor.convertirAHexadecimal(color));
-            
-        } catch (Exception e) {
-            System.out.println("Error al cargar la imagen: " + e.getMessage());
-        }
-    }
+public class ExtractorColor {
 
-		/*Este método extrae el color a partir del archivo recibido*/ 
-    public static void extraerColor(File imagenFile) {
-    	try {
-            // Cargamos la imagen desde un archivo
-            BufferedImage imagen = ImageIO.read(imagenFile);
-            
-            int color = extraerColorDominante(imagen);
-            
-            System.out.println("\nColor de la imagen: " + color);
-            System.out.println("Hexa: "+MyColor.convertirAHexadecimal(color));
-            
-        } catch (Exception e) {
-            System.out.println("Error al cargar la imagen: " + e.getMessage());
-        }
-    }
-    
-		/* Recibe una imagen, obtiene los colores rgb de una matriz de n*n (puntos de la imagen) y a partir de su promedio individual
-				genera un nuevo color que representa el color promedio de toda la imagen
-		*/
-    public static int extraerColorDominante(BufferedImage imagen) {
-    	final int MUESTRAS_WIDTH = 5; // Modificar para obtener mas/menos muestras
-    	final int MUESTRAS_HEIGHT = 5; // Modificar para obtener mas/menos muestras
-    	
-    	int width = imagen.getWidth();
-    	int height = imagen.getHeight();
-    	
-    	int distanciaX = width /MUESTRAS_WIDTH; // Distancia entre cada muestra x
-    	int distanciaY = height/MUESTRAS_HEIGHT; // Distancia entre cada muestra y
-    			
-    	int x = distanciaX/2; // Punto en el eje x
-    	int y = distanciaY/2; // Punto en el eje y
-    	
-    	Color matrizColores[][] = new Color[MUESTRAS_HEIGHT][MUESTRAS_WIDTH]; // Color de la libreria java.awt.Color;
-    	
-    	// Llenamos matriz con colores
-    	for(int i = 0; i < MUESTRAS_HEIGHT; i++) {
-    		for(int j = 0; j < MUESTRAS_WIDTH; j++){
-    			matrizColores[i][j] = new Color(imagen.getRGB(x, y));
-    			x += distanciaX;
-    		}
-    		
-    		y += distanciaY; // Avanzo en el eje Y
-    		x = distanciaX/2; // Reinicio x para recorrer dicho eje con el nuevo valor de y
-    	}
-    	
-			//inicializamos sumas
-    	int sumaRojo = 0;
-    	int sumaVerde = 0;
-    	int sumaAzul = 0;
-    	
-    	//Sumamos colores (rojo, verde y azul individualmente)
-    	for(int i = 0; i < MUESTRAS_HEIGHT; i++) {
-    		for(int j = 0; j < MUESTRAS_WIDTH; j++){
-    			sumaRojo += matrizColores[i][j].getRed();
-    			sumaVerde += matrizColores[i][j].getGreen();
-    			sumaAzul += matrizColores[i][j].getBlue();
-    		}
-    	}
-    	
-			//Calculamos el promedio
-    	int totalMuestras = MUESTRAS_HEIGHT*MUESTRAS_WIDTH;
-    	int rojoAvg = sumaRojo/totalMuestras;
-    	int verdeAvg = sumaVerde/totalMuestras;
-    	int azulAvg = sumaAzul/totalMuestras;
-    	
-			//Obtenemos el color en valor decimal a partir de los promedios rgb obtenidos
-    	int colorDominante = (rojoAvg << 16) + (verdeAvg << 8) + azulAvg;
-    	
-    	return colorDominante;
-    }
-    
+	private Context context;
+	public ExtractorColor(Context context){
+		this.context = context;
+	}
 
-}
+	/*Este método extrae el color a partir del bitmap recibido*/
+
+	public MyColor extraerColor(Bitmap imgBitmap) {
+		MyColor color = null;
+		try {
+			color = extraerColorDominante(imgBitmap);
+
+			String texto = "Color de la imagen: " + color.getValor();
+			Toast.makeText(context, texto, Toast.LENGTH_SHORT).show();
+
+		} catch (Exception e) {
+
+			Toast.makeText(context, "Error al cargar la imagen", Toast.LENGTH_SHORT).show();
+			color = new MyColor("FFFFFF");
+		}
+		return color;
+	}
+
+	public Bitmap obtenerBitmap(File fileImage){
+		String filePath = fileImage.getPath();
+		Bitmap imagen = BitmapFactory.decodeFile(filePath);
+
+		return imagen;
+	}
+
+	public MyColor extraerColorDominante(Bitmap imagen) {
+
+		final int MUESTRAS_WIDTH = 5; // Modificar para obtener mas/menos muestras
+		final int MUESTRAS_HEIGHT = 5; // Modificar para obtener mas/menos muestras
+
+		int width = imagen.getWidth();
+		int height = imagen.getHeight();
+
+		int distanciaX = width /MUESTRAS_WIDTH; // Distancia entre cada muestra x
+		int distanciaY = height/MUESTRAS_HEIGHT; // Distancia entre cada muestra y
+
+		int x = distanciaX/2; // Punto en el eje x
+		int y = distanciaY/2; // Punto en el eje y
+
+		//int matrizPixeles[][] = new int[MUESTRAS_HEIGHT][MUESTRAS_WIDTH]; // Guardaremos los pixeles aqui
+
+		int sumaRojo = 0;
+		int sumaVerde = 0;
+		int sumaAzul = 0;
+		int pixel;
+		// Tomamos muestras y obtenemos el rgb indiviula de cada pixel
+		for(int i = 0; i < MUESTRAS_HEIGHT; i++) {
+			for(int j = 0; j < MUESTRAS_WIDTH; j++){
+				pixel = imagen.getPixel(x, y);
+				sumaRojo += Color.red(pixel);
+				sumaVerde += Color.green(pixel);
+				sumaAzul += Color.blue(pixel);
+
+				x += distanciaX;
+			}
+
+			y += distanciaY; // Avanzo en el eje Y
+			x = distanciaX/2; // Reinicio x para recorrer dicho eje con el nuevo valor de y
+		}
+
+
+		//Calculamos el promedio
+		int totalMuestras = MUESTRAS_HEIGHT*MUESTRAS_WIDTH;
+		int rojoAvg = sumaRojo/totalMuestras;
+		int verdeAvg = sumaVerde/totalMuestras;
+		int azulAvg = sumaAzul/totalMuestras;
+
+		//Obtenemos el color en valor decimal a partir de los promedios rgb obtenidos
+		int colorDominante = (rojoAvg << 16) + (verdeAvg << 8) + azulAvg;
+		int colorDominante2 = Color.rgb(rojoAvg, verdeAvg, azulAvg);
+
+
+		MyColor color = new MyColor(colorDominante, colorDominante, colorDominante2);
+
+		return color;
+	}
+
 
 
 
+}
 
 
 
