@@ -9,4 +9,11 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- Strings de activity decoloracion -->
+    <string name="tv_titulo">Decoloración:</string>
+    <string name="btn_iniciar">Comenzar</string>
+    <string name="tv_volver">Volver</string>
+    <string name="tv_terminar">Terminar</string>
+
 </resources>
