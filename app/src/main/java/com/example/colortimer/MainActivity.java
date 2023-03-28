@@ -187,4 +187,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
     }
+
+    public void abrirProceso(View view){
+        Intent siguiente = new Intent(this, DecoloracionActivity.class);
+        startActivity(siguiente);
+    }
 }

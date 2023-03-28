@@ -82,6 +82,19 @@ public class Colorimetria {
 	public int calcularDiferencia() {
 		return colorActual.evaluarDiferencia(colorDeseado);
 	}
+
+	public String obtenerEstado(){
+		String estado = "";
+		int resultado = calcularDiferencia();
+		if(resultado < 0){
+			estado = "Cabello arruinado";
+		}
+		else{
+			estado = "Continuar decoloración";
+		}
+
+		return estado;
+	}
 	
 	/* Método estatico
 	 * Regresa la diferencia entre los dos colores recibidos*/

@@ -100,6 +100,7 @@ public class MyColor {
 
     public void setValorHexadecimal(String valor) {
         this.valor = convertirADecimal(valor);
+        this.id = this.valor;
         updateValorView();
     }
 
@@ -109,22 +110,23 @@ public class MyColor {
      * Regresa -1 si ya se excedio la decoloración
      * */
     public int evaluarDiferencia(MyColor colorDeseado){
+        final int DIFERENCIA_ACEPTABLE = 110;
 
         // Resultado deseado - actual
         int difR = colorDeseado.getRed() - getRed();
         int difG = colorDeseado.getGreen() - getGreen();
         int difB = colorDeseado.getBlue() - getBlue();
 
-
-        if((difR > 0) && (difG > 0) && (difB > 0)){
-            return 1; // Aun no se ha igualado ningun componente rgb
+        if((difR >= -DIFERENCIA_ACEPTABLE && difR <= DIFERENCIA_ACEPTABLE)
+                && (difG >= -DIFERENCIA_ACEPTABLE && difG <= DIFERENCIA_ACEPTABLE)
+                && (difB >= -DIFERENCIA_ACEPTABLE && difB <= DIFERENCIA_ACEPTABLE)){
+            return -1; // Aun no se ha igualado ningun componente rgb
         }
 
-        if((difR == 0) || (difG == 0) || (difB == 0)){
-            return 0; // Tonos considerablemente iguales
+        else{
+            return 1; // Una o mas de las diferencias ya es negativa, misión fallida ;(
         }
 
-        return -1; // Una o mas de las diferencias ya es negativa, misión fallida ;(
 
     }
 
