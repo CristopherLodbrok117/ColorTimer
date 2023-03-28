@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">ColorTimer</string>
     <string name="title_activity_suggestion">SuggestionActivity</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -16,5 +17,10 @@
     <string name="btn_iniciar">Comenzar</string>
     <string name="tv_volver">Volver</string>
     <string name="tv_terminar">Terminar</string>
+    <!-- Fin Strings de Activity decoloracion -->
 
+    <!-- Strings Activity Main -->
+    <string name="btn_fotografia">FOTOGRAFIA</string>
+    <string name="btn_sugerencias">Mostrar Sugerencias</string>
+    <!-- Fin Strings Activity Main -->
 </resources>
