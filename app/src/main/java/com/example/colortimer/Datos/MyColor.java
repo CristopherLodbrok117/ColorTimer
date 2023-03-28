@@ -1,5 +1,6 @@
 package com.example.colortimer.Datos;
 
+import android.animation.ArgbEvaluator;
 import android.graphics.Color;
 
 public class MyColor {
@@ -109,13 +110,15 @@ public class MyColor {
      * Regresa 0 si ya se alcanzo el resultado
      * Regresa -1 si ya se excedio la decoloración
      * */
-    public int evaluarDiferencia(MyColor colorDeseado){
-        final int DIFERENCIA_ACEPTABLE = 110;
+    public int evaluarDiferencia(MyColor cd){
+        /*
+        final int DIFERENCIA_ACEPTABLE = 150;
 
         // Resultado deseado - actual
-        int difR = colorDeseado.getRed() - getRed();
-        int difG = colorDeseado.getGreen() - getGreen();
-        int difB = colorDeseado.getBlue() - getBlue();
+        int difR = cd.getRed() - getRed();
+        int difG = cd.getGreen() - getGreen();
+        int difB = cd.getBlue() - getBlue();
+
 
         if((difR >= -DIFERENCIA_ACEPTABLE && difR <= DIFERENCIA_ACEPTABLE)
                 && (difG >= -DIFERENCIA_ACEPTABLE && difG <= DIFERENCIA_ACEPTABLE)
@@ -124,10 +127,97 @@ public class MyColor {
         }
 
         else{
-            return 1; // Una o mas de las diferencias ya es negativa, misión fallida ;(
+            return 1; // Continuar
+        }*/
+        // sqrt
+        /*
+        long deseado = colorDeseado.getValor();
+        long actual = valor;
+
+        long rmean = ( (long)getRed() + (long)colorDeseado.getRed() ) / 2;
+        long r = (long)getRed() - (long)colorDeseado.getRed();
+        long g = (long)getGreen() - (long)colorDeseado.getGreen();
+        long b = (long)getBlue() - (long)colorDeseado.getBlue();
+
+        double distance = Math.sqrt((((512+rmean)*r*r)>>8) + 4*g*g + (((767-rmean)*b*b)>>8));
+
+        return (int)distance;
+        */
+         //A partir del brillo, funciona para blanco
+        /*
+        double brillo1 = Math.sqrt( (0.299*(Math.pow(getRed(), 2))) + (0.587*(Math.pow(getGreen(), 2))) +
+                (0.114*(Math.pow(getBlue(), 2))) );
+        double brillo2 = Math.sqrt( (0.299*(Math.pow(cd.getRed(), 2))) + (0.587*(Math.pow(cd.getGreen(), 2))) +
+                (0.114*(Math.pow(cd.getBlue(), 2))) );
+
+        double diff = brillo1 - brillo2;
+        int diferencia = (int)diff - 255;
+        return diferencia;
+
+*/
+        //Formula luma 1, buena para color blanco
+        final int DIFERENCIA_ACEPTABLE = 10;
+        double luma1 = (0.2126 * getRed()) + (0.7152 * getGreen()) + (0.0722 * getBlue());
+        double luma2 = (0.2126 * cd.getRed()) + (0.7152 * cd.getGreen()) + (0.0722 * cd.getBlue());
+
+        double result = ((int)luma1 - (int)luma2) - 255;
+
+        if(result >= -DIFERENCIA_ACEPTABLE && result <= DIFERENCIA_ACEPTABLE){
+            return -1;
+        }
+        else{
+            return 1;
         }
 
 
+        // Luma 2
+        /*double luma1 = (0.299 * getRed()) + (0.587 * getGreen()) + (0.114 * getBlue());
+        double luma2 = (0.299 * cd.getRed()) + (0.587 * cd.getGreen()) + (0.114 * cd.getBlue());
+
+        double result = luma1 - luma2;
+
+        return (int)result;*/
+
+        /*
+        int r = (valor >> 16) & 0xff;
+        int g = (valor >> 8) & 0xff;
+        int b = valor & 0xff;
+        int luz1 = (r + g + b) / 3;
+
+        int r2 = (cd.getValor() >> 16) & 0xff;
+        int g2 = (cd.getValor() >> 8) & 0xff;
+        int b2 = cd.getValor() & 0xff;
+        int luz2 = (r2 + g2 + b2) / 3;
+
+        return luz2 - luz1;*/
+
+        //Escala de grises
+        /*int pixel1 = (getRed() + getGreen() + getBlue()) / 3;
+        int pixel2 = (cd.getRed() + cd.getGreen() + cd.getBlue()) / 3;
+
+        MyColor gris1 = new MyColor();
+        MyColor gris2 = new MyColor();
+        int g1 = (Color.red(pixel1) << 16) + (Color.green(pixel1) << 8) + Color.blue(pixel1);
+        int g2 = (Color.red(pixel2) << 16) + (Color.green(pixel2) << 8) + Color.blue(pixel2);
+
+        gris1.setValor(g1);
+        gris2.setValor(g2);
+
+        int color1 = (gris1.getRed() + gris1.getGreen() + gris1.getBlue() );
+        int color2 = (gris2.getRed() + gris2.getGreen() + gris2.getBlue() );
+
+        return color2 - color1;
+        */
+
+    }
+
+    public String evaluarDiferenciaStr(MyColor colorDeseado){
+        final int DIFERENCIA_ACEPTABLE = 110;
+        float fraction= .75f;
+        Object str = new ArgbEvaluator().evaluate(fraction, valorView, colorDeseado.getValorView());
+
+
+        return str.toString();
     }
 
     public static String convertirAHexadecimal(int decimal) {

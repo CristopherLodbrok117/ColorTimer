@@ -9,12 +9,12 @@
 
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btn_proceso"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="48dp"
         android:onClick="abrirProceso"
-        android:text="Button"
+        android:text="@string/btn_proceso"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.924"
@@ -51,7 +51,7 @@
         android:layout_marginBottom="48dp"
         android:text="@string/btn_sugerencias"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintEnd_toStartOf="@+id/btn_proceso"
         app:layout_constraintHorizontal_bias="0.346"
         app:layout_constraintStart_toStartOf="parent" />
 

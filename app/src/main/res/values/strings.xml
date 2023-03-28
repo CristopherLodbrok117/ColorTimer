@@ -13,8 +13,11 @@
 
     <!-- Strings de activity decoloracion -->
     <string name="tv_titulo">Decoloración:</string>
-    <string name="tv_update">Estado Actual:</string>
+    <string name="tv_update">Bienvenido</string>
     <string name="btn_iniciar">Comenzar</string>
+    <string name="tv_inicial">Inicial</string>
+    <string name="tv_actual">Actual</string>
+    <string name="tv_final">Deseado</string>
     <string name="tv_volver">Volver</string>
     <string name="tv_terminar">Terminar</string>
     <!-- Fin Strings de Activity decoloracion -->
@@ -22,5 +25,6 @@
     <!-- Strings Activity Main -->
     <string name="btn_fotografia">FOTOGRAFIA</string>
     <string name="btn_sugerencias">Mostrar Sugerencias</string>
+    <string name="btn_proceso">Decoloración</string>
     <!-- Fin Strings Activity Main -->
 </resources>

@@ -49,8 +49,9 @@ public class DecoloracionActivity extends AppCompatActivity {
     private ImageButton btn_volver;
     private ImageButton btn_terminar;
 
-    private final int TOTAL_COLORES = 3;
-    private String colores[] = {"35E20A", "1081DC", "DF53C7"};
+    private String colores[] = {"AAA7A4", "FFFFFF"};
+
+    private final int TOTAL_COLORES = colores.length;
 
     private boolean activo = false; // Cambia hasta que se presiona el boton iniciar
     private boolean fotoInicialTomada = false; // Cambia con la primer foto
@@ -107,8 +108,8 @@ public class DecoloracionActivity extends AppCompatActivity {
         extractor = new ExtractorColor(this);
 
         MyColor colorDeseado = new MyColor();
-        int pos = sugerirColorTinte();
-        colorDeseado.setValorHexadecimal(colores[pos]); // Le damos un valor hexadecimal
+        //int pos = sugerirColorTinte();
+        colorDeseado.setValorHexadecimal("FFFFFF"); // Le damos un valor hexadecimal
 
 
         tv_id.setText(strId);
@@ -141,6 +142,7 @@ public class DecoloracionActivity extends AppCompatActivity {
             tv_estado.setText(estado);
             if(resultadoAnalisis == "Cabello arruinado"){
                 temporizador.pararReloj();
+                btn_foto.setEnabled(false);
             }
         }
         else{ //No se ha iniciado la decoloración y se debe tomar la primer foto
@@ -181,6 +183,7 @@ public class DecoloracionActivity extends AppCompatActivity {
 
     public void detenerDecoloración(View view){
         tv_estado.setText("Decoloración finalizada");
+        btn_foto.setEnabled(false);
 
         temporizador.pararReloj();
 

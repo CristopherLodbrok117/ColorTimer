@@ -5,33 +5,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import com.example.colortimer.DAO.DaoCabello;
 import com.example.colortimer.DAO.DaoColor;
 import com.example.colortimer.DAO.DaoProceso;
 import com.example.colortimer.DAO.DaoTinte;
-import com.example.colortimer.Datos.Proceso;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -107,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        btnProcesos = findViewById(R.id.button2);
+        btnProcesos = findViewById(R.id.btn_proceso);
         dbColor = new DaoColor(this);
         dbTinte = new DaoTinte(this);
         dbProceso = new DaoProceso(this);

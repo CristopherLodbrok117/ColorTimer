@@ -85,6 +85,7 @@ public class Colorimetria {
 
 	public String obtenerEstado(){
 		String estado = "";
+		estado = "";
 		int resultado = calcularDiferencia();
 		if(resultado < 0){
 			estado = "Cabello arruinado";
