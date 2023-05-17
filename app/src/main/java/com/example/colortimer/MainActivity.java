@@ -10,6 +10,8 @@ import com.example.colortimer.DAO.DaoCabello;
 import com.example.colortimer.DAO.DaoColor;
 import com.example.colortimer.DAO.DaoProceso;
 import com.example.colortimer.DAO.DaoTinte;
+import com.example.colortimer.Datos.Proceso;
+import com.example.colortimer.Datos.Temporizador;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,6 +22,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private DaoProceso dbProceso;
     private DaoTinte dbTinte;
 
-
+    private List<Proceso> procesos = null;
+    private Temporizador temporizador;
     private  int CAMERA_PERMISION_CODE = 1;
     private  int CAMERA_REQUEST_CODE = 2;
 
@@ -179,5 +184,41 @@ public class MainActivity extends AppCompatActivity {
     public void abrirProceso(View view){
         Intent siguiente = new Intent(this, DecoloracionActivity.class);
         startActivity(siguiente);
+    }
+
+    public void activarTemporizador(){
+        // Cada minuto incrementara el contador y al llegar a 10 envia una notificación
+        temporizador = new Temporizador(1);
+        actualizarMensajeNotificacion();
+        temporizador.comenzarReloj(this);
+
+    }
+
+    public void actualizarMensajeNotificacion(){
+        StringBuffer msg = new StringBuffer("");
+        procesos.forEach(proceso -> {
+            msg.append(proceso.getNombreCliente());
+            msg.append("\n");
+        });
+
+        temporizador.setNotificationMessage(msg.toString());
+    }
+
+    public void desactivarTemporizador(){
+        if(temporizador.estaActivo()){
+            temporizador.pararReloj();
+        }
+    }
+
+    public void cargarListaProcesos(){
+        this.procesos = dbProceso.listarrProcesosActivos();
+
+        this.procesos.forEach(proceso ->{
+            agregarBotonProceso();
+        });
+    }
+
+    public void agregarBotonProceso(){
+
     }
 }

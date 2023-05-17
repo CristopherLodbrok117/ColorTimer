@@ -19,7 +19,7 @@ public class ProcesoDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(
             "CREATE TABLE IF NOT EXISTS "+TABLE_PROCESOS+"(" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," + "nombre VARCHAR(50)," +
                 "tiempoDecoloracion INTEGER," +
                 "estado VARCHAR(1)," +
                 "idtinte INTEGER REFERENCES Tintes(id) DEFAULT NULL" +

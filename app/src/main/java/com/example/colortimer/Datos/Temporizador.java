@@ -20,27 +20,32 @@ public class Temporizador {
     private int tiempoNotificacionMin;
     private boolean activo;
 
-    private String nombreDecoloracion;
+    private int control_notificacion;
+    private String notificationTittle;
+    private String notificationMessage;
+
 
     public static final int MILISEGUNDOS_POR_SEG = 1000;
     public static final int SEGUNDOS_POR_MIN = 60;
     public static final int TOTAL_MINUTOS = 10;
+
+    public static final int INTERVALO_CONTEO = 1;
     public static final int INICIO_INMEDIATO = 0;
 
+    public static final int CONTADOR_INICIAL = 0;
+
     //Se fija el intervalo de notificación en un tiempo default de 10 minutos
-    public Temporizador (){
-        reloj = new Timer();
-        tiempoNotificacionMin = TOTAL_MINUTOS * SEGUNDOS_POR_MIN * MILISEGUNDOS_POR_SEG;
-    }
+    public Temporizador() { this(INTERVALO_CONTEO); }
 
     //Fija el intervalo de notificación a partir del parametro recibido (minutos)
     public Temporizador(int minutos) {
-        reloj = new Timer();
-        tiempoNotificacionMin = minutos * SEGUNDOS_POR_MIN * MILISEGUNDOS_POR_SEG;
+        this.notificationTittle = "Hay decoloraciones por actualizar: ";
+        this.reloj = new Timer();
+        this.tiempoNotificacionMin = minutos * SEGUNDOS_POR_MIN * MILISEGUNDOS_POR_SEG;
     }
 
-    public void setNombreDecoloracion(String nombreDecoloracion){
-        this.nombreDecoloracion = nombreDecoloracion;
+    public void setNotificationMessage(String msg) {
+        this.notificationMessage = msg;
     }
 
     public void pararReloj() {
@@ -67,11 +72,36 @@ public class Temporizador {
             }
         };
 
-        reloj.schedule(tarea, INICIO_INMEDIATO, 20000);
+        //reloj.schedule(tarea, INICIO_INMEDIATO, this.tiempoNotificacionMin);
+        reloj.schedule(tarea, INICIO_INMEDIATO, 5000);
     }
 
-    public void crearCanalNotificacion(Context context){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+    public void comenzarReloj(Context context) {
+        activo = true;
+        control_notificacion = CONTADOR_INICIAL; // Inicializamos el contador de minutos
+
+        TimerTask tarea = new TimerTask() {
+
+            @Override
+            public void run() {
+                //System.out.println("Lanzar notificación");
+                // Toast.makeText(this, "Llego la hora de tomar la foto", Toast.LENGTH_SHORT).show();
+                control_notificacion++;
+                if (control_notificacion >= TOTAL_MINUTOS) {
+                    crearCanalNotificacion(context);
+                    enviarNotificacion(context);
+                    control_notificacion = CONTADOR_INICIAL;
+                }
+
+            }
+        };
+
+        //reloj.schedule(tarea, INICIO_INMEDIATO, tiempoNotificacionMin);
+        reloj.schedule(tarea, INICIO_INMEDIATO, 2000);
+    }
+
+    public void crearCanalNotificacion(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("My Notification"
                     , "Notification", NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription("My channel description");
@@ -81,13 +111,12 @@ public class Temporizador {
         }
     }
 
-    public void enviarNotificacion(Context context){
-        String title = "Decoloración: " + nombreDecoloracion;
-        String desc = "Tomar nueva foto para actualizar estado de decoloración";
+    public void enviarNotificacion(Context context) {
+
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "My Notification");
-        builder.setContentTitle(title);
-        builder.setContentText(desc);
+        builder.setContentTitle(notificationTittle);
+        builder.setContentText(notificationMessage);
         builder.setSmallIcon(R.drawable.baseline_add_alert_24);
         builder.setAutoCancel(true);
 
@@ -106,5 +135,4 @@ public class Temporizador {
         manager.notify(1, builder.build());
 
     }
-
 }

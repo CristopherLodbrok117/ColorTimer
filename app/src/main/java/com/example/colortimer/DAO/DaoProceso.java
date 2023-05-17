@@ -13,6 +13,7 @@ import com.example.colortimer.DAO.helpers.ProcesoDBHelper;
 import com.example.colortimer.Datos.Proceso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DaoProceso extends ProcesoDBHelper {
 
@@ -35,6 +36,7 @@ public class DaoProceso extends ProcesoDBHelper {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
 
+            values.put("nombre", proceso.getNombreCliente());
             values.put("tiempoDecoloracion",proceso.getTiempoDecoloracion());
             values.put("estado",proceso.getEstado());
             id = db.insert(TABLE_PROCESOS,null,values);
@@ -65,6 +67,20 @@ public class DaoProceso extends ProcesoDBHelper {
         return p;
     }
 
+    public List<Proceso> listarrProcesosActivos() {
+        List<Proceso> procesos = this.listar();
+        List<Proceso> procesosActivos = new ArrayList<>();
+
+        procesos.forEach(proceso -> {
+            if(proceso.getEstado() == Proceso.ESTADO_ACTIVO){
+                procesosActivos.add(proceso);
+            }
+        });
+
+        return procesosActivos;
+
+    }
+
     /**
      * Listar (Read): Devuelve todos los registros de procesos
      * @return ArrayList<Proceso> a
@@ -78,7 +94,7 @@ public class DaoProceso extends ProcesoDBHelper {
         try{
             if(cursor.moveToFirst()){
                 do {
-                    a.add(new Proceso(cursor.getInt(0),cursor.getInt(1),cursor.getString(2)));
+                    a.add(new Proceso(cursor.getInt(0),cursor.getString(1),cursor.getInt(2),cursor.getString(3)));
                 }while(cursor.moveToNext());
             }
         } catch (Exception e){
