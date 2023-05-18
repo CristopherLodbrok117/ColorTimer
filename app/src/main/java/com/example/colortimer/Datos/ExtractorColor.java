@@ -25,12 +25,12 @@ public class ExtractorColor {
 		try {
 			color = extraerColorDominante(imgBitmap);
 
-			String texto = "Color de la imagen: " + color.getValor();
-			Toast.makeText(context, texto, Toast.LENGTH_SHORT).show();
+			/*String texto = "Color de la imagen: " + color.getValor();
+			Toast.makeText(context, texto, Toast.LENGTH_SHORT).show();*/
 
 		} catch (Exception e) {
 
-			Toast.makeText(context, "Error al cargar la imagen", Toast.LENGTH_SHORT).show();
+			/*Toast.makeText(context, "Error al cargar la imagen", Toast.LENGTH_SHORT).show();*/
 			color = new MyColor("FFFFFF");
 		}
 		return color;

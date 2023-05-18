@@ -65,9 +65,7 @@ public class MainActivity extends AppCompatActivity {
         cargarListaProcesos();
 
         if(!procesos.isEmpty()){ // Lista con procesos activos ? activar notificaciones
-            if(!temporizador.estaActivo()){
-                activarTemporizador();
-            }
+            activarTemporizador();
 
         }
         else{   // Lista vacia y siguen activas las notificaicones ? desactivar notificaciones
@@ -79,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop(){
         super.onStop();
-        mostrarMensaje("Main onstop");
+        //mostrarMensaje("Main onstop");
         desactivarTemporizador();
         temporizador = null;
     }
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        mostrarMensaje("Main onDestroy");
+        //mostrarMensaje("Main onDestroy");
         temporizador = null;
     }
 
@@ -106,9 +104,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void activarTemporizador(){
         // Cada minuto incrementara el contador y al llegar a 10 envia una notificación
+        try {
+            actualizarMensajeNotificacion();
+            temporizador.comenzarReloj(this);
+        }catch (NullPointerException ex){
+            mostrarMensaje("Intento de iniciar actualizaciones sin new");
+        }
 
-        actualizarMensajeNotificacion();
-        temporizador.comenzarReloj(this);
 
     }
 
@@ -117,8 +119,11 @@ public class MainActivity extends AppCompatActivity {
 
         if(!procesos.isEmpty()){
             for(Proceso proceso : procesos ){
-                msg.append(proceso.getNombreCliente());
-                msg.append(", ");
+                if(proceso.getEstado().compareTo(Proceso.ESTADO_ACTIVO) == 0){
+                    msg.append("-");
+                    msg.append(proceso.getNombreCliente());
+                    msg.append(" ");
+                }
             }
         }
 
@@ -141,7 +146,9 @@ public class MainActivity extends AppCompatActivity {
         this.procesos = dbProceso.listarProcesosActivos();
 
         for(Proceso proceso : procesos){
-            agregarBotonProceso(proceso);
+            //if(proceso.getEstado().compareTo(Proceso.ESTADO_ACTIVO) == 0){
+                agregarBotonProceso(proceso);
+            //}
         }
     }
 

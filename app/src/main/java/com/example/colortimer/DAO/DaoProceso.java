@@ -57,12 +57,12 @@ public class DaoProceso extends ProcesoDBHelper {
      * @return Proceso p
      */
     public Proceso buscar(int idProceso){
-        Proceso p = new Proceso();
+        Proceso p = null;
         ArrayList<Proceso> listado = this.listar();
 
         for(int i = 0; i < listado.size(); i++){
             if(listado.get(i).getId() == idProceso){
-                p = listado.get(i);
+                p = new Proceso(listado.get(i));
                 break;
             }
         }
@@ -75,12 +75,13 @@ public class DaoProceso extends ProcesoDBHelper {
         List<Proceso> procesosActivos = new ArrayList<>();
 
         for(Proceso proceso : procesos){
-            if(proceso.getEstado() == Proceso.ESTADO_ACTIVO){
-                procesosActivos.add(proceso);
+            if(proceso.getEstado().compareTo("A") == 0){
+                Proceso p = new Proceso(proceso);
+                procesosActivos.add(p);
             }
         }
 
-        return this.listar();
+        return procesosActivos;
 
     }
 
@@ -126,8 +127,13 @@ public class DaoProceso extends ProcesoDBHelper {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         if(db != null){
-            db.execSQL("UPDATE "+TABLE_PROCESOS+" SET tiempoDecoloracion='" +
-                    proceso.getTiempoDecoloracion()+"',estado='"+proceso.getEstado()+"'");
+            db.execSQL("UPDATE "+TABLE_PROCESOS+" SET nombre='" + proceso.getNombreCliente() +"', "+
+                    "tiempoDecoloracion='" + proceso.getTiempoDecoloracion()+ "', " +
+                    "estado='"+proceso.getEstado()+ "'," +
+                    "inicial='" + proceso.getInicial().getValor() + "', "+
+                    "actual='" + proceso.getActual().getValor() +  "', "+
+                    "deseado='" + proceso.getDeseado().getValor() +  "'" +
+                    " WHERE id=" + proceso.getId());
             db.close();
         }
     }

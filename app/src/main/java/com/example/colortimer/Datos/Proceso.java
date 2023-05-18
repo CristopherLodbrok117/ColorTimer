@@ -33,6 +33,17 @@ public class Proceso {
         this.deseado = new MyColor(deseado);;
     }
 
+    public Proceso(Proceso p) {
+        this.id = p.getId();
+        this.nombreCliente = p.getNombreCliente();
+        this.tiempoDecoloracion = p.getTiempoDecoloracion();
+        this.estado = p.getEstado();
+
+        this.inicial = new MyColor(p.getInicial().getValor());
+        this.actual = new MyColor(p.getActual().getValor());;
+        this.deseado = new MyColor(p.getDeseado().getValor());;
+    }
+
     public void setId(int id){
         this.id = id;
     }
@@ -90,6 +101,9 @@ public class Proceso {
         s += "Cliente: "+ this.nombreCliente + "\n";
         s += "TD: "+tiempoDecoloracion+"\n";
         s += "Estado: "+estado+"\n";
+        s +=  "Inicial" + inicial.getValor() + "\n";
+        s +=  "Actual" + actual.getValor() + "\n";
+        s +=  "Final" + deseado.getValor() + "\n";
         return s;
     }
 }

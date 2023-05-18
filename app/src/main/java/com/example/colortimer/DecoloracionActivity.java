@@ -52,7 +52,10 @@ public class DecoloracionActivity extends AppCompatActivity {
     private ImageButton btn_volver;
     private ImageButton btn_terminar;
 
-    private String colores[] = {"FFFFFF", "F0F0FF", "F0FFF0", "FDFEDA", "FFF0FF", "FFDAFF"};
+    private MyColor colores[] = {new MyColor(16777215),
+            new MyColor(15790335), new MyColor(15794160),
+            new MyColor(16645850), new MyColor(16773375),
+            new MyColor(16767743)};
     private static int colorSeleccionado = 0;
 
     private final int TOTAL_COLORES = colores.length;
@@ -77,6 +80,7 @@ public class DecoloracionActivity extends AppCompatActivity {
         elCosoEseDeLaFoto(); // Sobreescribimos el listener del boton foto
         inicializarProceso();
     }
+
 
     private void inicializarViews(){
 
@@ -104,6 +108,17 @@ public class DecoloracionActivity extends AppCompatActivity {
         int id = getIntent().getIntExtra("id", ID_INVALIDO);
 
         proceso = dbProceso.buscar(id);
+        if(proceso != null){
+            System.out.println(proceso.toString());
+            if(proceso.getEstado().compareTo("A") == 0){
+                System.out.println("Esta activo");
+                activo = true;
+            }
+            else{
+                activo = false;
+            }
+        }
+
 
 
         if(proceso == null){ // Proceso no encontrado o nueva decoloración
@@ -114,13 +129,14 @@ public class DecoloracionActivity extends AppCompatActivity {
             proceso.setTiempoDecoloracion(0);
             proceso.setInicial(0);
             proceso.setActual(0);
-            proceso.setDeseado(16777215);
+            cambiarColorDeseado();
+            proceso.setDeseado(colores[colorSeleccionado].getValor());
         }
-        else{
-            colorimetria.setColorInicial(proceso.getInicial());
-            colorimetria.setColorActual(proceso.getActual());
-            colorimetria.setColorDeseado(proceso.getDeseado());
-        }
+
+        colorimetria.setColorInicial(proceso.getInicial());
+        colorimetria.setColorActual(proceso.getActual());
+        colorimetria.setColorDeseado(proceso.getDeseado());
+
 
         mostrarDatos();
 
@@ -131,35 +147,41 @@ public class DecoloracionActivity extends AppCompatActivity {
 
         extractor = new ExtractorColor(this);
 
-        cambiarColor();
-        MyColor colorDeseado = new MyColor(colores[colorSeleccionado]);
+        tv_id.setText(strId);
+        txt_nombre.setText(proceso.getNombreCliente());
+        tv_estado.setText("Estado: " + definirMensajeEstado(proceso.getEstado()));
 
-        if(proceso != null){ // Proceso ya en curso
-            colorDeseado.setValor(proceso.getDeseado().getValor());
-            img_inicial.setBackgroundColor(proceso.getInicial().getValorView());
-            img_actual.setBackgroundColor(proceso.getActual().getValorView());
+        img_inicial.setBackgroundColor(proceso.getInicial().getValorView());
+        img_actual.setBackgroundColor(proceso.getActual().getValorView());
+        img_final.setBackgroundColor(proceso.getDeseado().getValorView());
+
+
+        if(proceso.getEstado().compareTo("T") == 0 || proceso.getEstado().compareTo("X") == 0){
+            desactivarBotonesGestion();
         }
 
-
-
-        tv_id.setText(strId);
-
-        txt_nombre.setText(proceso.getNombreCliente());
-
-        img_final.setBackgroundColor(colorDeseado.getValorView());
-
         btn_iniciar.setEnabled(false);
+        agregarEfectoClickBotones();
+    }
+
+    private void agregarEfectoClickBotones(){
+        img_final.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cambiarColorDeseado();
+            }
+        });
     }
 
     private String definirMensajeEstado(String estado){
         String msg = "";
-        if(estado == Proceso.ESTADO_PREPARANDO){
+        if(estado.compareTo("P") == 0){
             msg = "Preparando decoloración";
         }
-        else if(estado == Proceso.ESTADO_ACTIVO){
+        else if(estado.compareTo("A") == 0){
             msg = "Decolorando";
         }
-        else if(estado == Proceso.ESTADO_TERMINADO){
+        else if(estado.compareTo("T") == 0){
             msg = "Decoloración exitosa";
         }
         else{
@@ -169,17 +191,14 @@ public class DecoloracionActivity extends AppCompatActivity {
         return msg;
     }
 
-    private void sugerirColorTinte(){
-        Random random = new Random();
-        colorSeleccionado  = random.nextInt(TOTAL_COLORES - 0) + 0;
-    }
-
     //Cambia de manera lineal el color, llega al final y reinicia desde 0
-    private void cambiarColor(){
+    private void cambiarColorDeseado(){
         colorSeleccionado++;
         if(colorSeleccionado >= TOTAL_COLORES-1){
             colorSeleccionado = 0;
         }
+        colorimetria.setColorDeseado(colores[colorSeleccionado]);
+        img_final.setBackgroundColor(colorimetria.getColorDeseado().getValorView());
     }
 
     private void actualizarEstadoActual(Bitmap foto){
@@ -196,8 +215,9 @@ public class DecoloracionActivity extends AppCompatActivity {
             estado += definirMensajeEstado(resultadoAnalisis);
             tv_estado.setText(estado);
 
-            if(resultadoAnalisis == Proceso.ESTADO_ARRUINADO){
-                btn_foto.setEnabled(false);
+            if(resultadoAnalisis.compareTo(Proceso.ESTADO_ARRUINADO) == 0){
+                desactivarBotonesGestion();
+                proceso.setEstado(Proceso.ESTADO_ARRUINADO);
             }
             actualizarProceso();
         }
@@ -217,12 +237,14 @@ public class DecoloracionActivity extends AppCompatActivity {
         img_inicial.setBackgroundColor(color.getValorView()); // Mostramos el color extraido en la ImageView
         img_actual.setBackgroundColor(color.getValorView());
         tv_estado.setText(estado);
+
         btn_iniciar.setEnabled(true); // Ahora podemos iniciar la decoloración
 
         fotoInicialTomada = true;
     }
 
     public void volverPantallaPrincipal(View view){
+
         Intent anterior = new Intent(this, MainActivity.class);
         startActivity(anterior);
     }
@@ -242,33 +264,42 @@ public class DecoloracionActivity extends AppCompatActivity {
 
     public void detenerDecoloración(View view){
         tv_estado.setText("Decoloración finalizada");
-        btn_foto.setEnabled(false);
 
+        proceso.setEstado(Proceso.ESTADO_TERMINADO);
+        actualizarProceso();
+
+        desactivarBotonesGestion();
     }
 
     public void registrarProceso(){
-        proceso.setNombreCliente(txt_nombre.getText().toString());
+
         proceso.setEstado(Proceso.ESTADO_ACTIVO);
-        proceso.setInicial(colorimetria.getColorInicial().getValor());
-        proceso.setActual(colorimetria.getColorActual().getValor());
-        proceso.setDeseado(colorimetria.getColorDeseado().getValor());
+        cargarDatosAProceso();
         //dbProceso.crear(proceso);
         mostrarMensaje(String.valueOf(dbProceso.crear(proceso)));
     }
 
     public void actualizarProceso(){
-        proceso.setInicial(colorimetria.getColorInicial().getValor());
-        proceso.setActual(colorimetria.getColorActual().getValor());
-        proceso.setDeseado(colorimetria.getColorDeseado().getValor());
+        cargarDatosAProceso();
         dbProceso.actualizar(proceso);
     }
 
-    public void editarProceso(){
-
+    public void cargarDatosAProceso(){
+        proceso.setNombreCliente(txt_nombre.getText().toString());
+        proceso.setInicial(colorimetria.getColorInicial().getValor());
+        proceso.setActual(colorimetria.getColorActual().getValor());
+        proceso.setDeseado(colorimetria.getColorDeseado().getValor());
     }
 
     public void mostrarMensaje(String text){
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+    }
+
+    public void desactivarBotonesGestion(){
+        btn_foto.setEnabled(false);
+        btn_iniciar.setEnabled(false);
+        btn_terminar.setEnabled(false);
+        img_final.setEnabled(false);
     }
 
     // Funciones de la camara
