@@ -18,7 +18,7 @@ import java.util.TimerTask;
 public class Temporizador {
     private Timer reloj;
     private int tiempoNotificacionMin;
-    private boolean activo;
+    private boolean activo = false;
 
     private int control_notificacion;
     private String notificationTittle;
@@ -58,23 +58,7 @@ public class Temporizador {
     }
 
     //Esta función inicia el temporizador y
-    public void iniciarReloj(Context context) {
-        activo = true;
 
-        TimerTask tarea = new TimerTask() {
-
-            @Override
-            public void run() {
-                //System.out.println("Lanzar notificación");
-                // Toast.makeText(this, "Llego la hora de tomar la foto", Toast.LENGTH_SHORT).show();
-                crearCanalNotificacion(context);
-                enviarNotificacion(context);
-            }
-        };
-
-        //reloj.schedule(tarea, INICIO_INMEDIATO, this.tiempoNotificacionMin);
-        reloj.schedule(tarea, INICIO_INMEDIATO, 5000);
-    }
 
     public void comenzarReloj(Context context) {
         activo = true;
@@ -97,7 +81,7 @@ public class Temporizador {
         };
 
         //reloj.schedule(tarea, INICIO_INMEDIATO, tiempoNotificacionMin);
-        reloj.schedule(tarea, INICIO_INMEDIATO, 2000);
+        reloj.schedule(tarea, INICIO_INMEDIATO, 3000);
     }
 
     public void crearCanalNotificacion(Context context) {

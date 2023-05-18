@@ -25,6 +25,6 @@
     <!-- Strings Activity Main -->
     <string name="btn_fotografia">FOTOGRAFIA</string>
     <string name="btn_sugerencias">Mostrar Sugerencias</string>
-    <string name="btn_proceso">Decoloración</string>
+    <string name="btn_proceso">Nueva Decoloración</string>
     <!-- Fin Strings Activity Main -->
 </resources>

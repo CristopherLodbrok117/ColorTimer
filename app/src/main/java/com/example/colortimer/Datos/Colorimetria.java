@@ -83,15 +83,11 @@ public class Colorimetria {
 		return colorActual.evaluarDiferencia(colorDeseado);
 	}
 
-	public String obtenerEstado(){
-		String estado = "";
-		estado = "";
+	public String  obtenerEstado(){
+		String estado = Proceso.ESTADO_ACTIVO;
 		int resultado = calcularDiferencia();
-		if(resultado < 0){
-			estado = "Cabello arruinado";
-		}
-		else{
-			estado = "Continuar decoloración";
+		if(resultado > 0) {
+			estado = Proceso.ESTADO_ARRUINADO;
 		}
 
 		return estado;

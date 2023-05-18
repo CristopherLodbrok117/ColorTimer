@@ -14,11 +14,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.colortimer.DAO.DaoProceso;
 import com.example.colortimer.Datos.Colorimetria;
 import com.example.colortimer.Datos.ExtractorColor;
 import com.example.colortimer.Datos.MyColor;
@@ -31,13 +33,14 @@ public class DecoloracionActivity extends AppCompatActivity {
 
     private Proceso proceso;
     private Colorimetria colorimetria;
-
-    private Temporizador temporizador;
+    private DaoProceso dbProceso;
 
     private ExtractorColor extractor;
 
     private TextView tv_id;
     private TextView tv_estado;
+
+    private EditText txt_nombre;
 
     private ImageView img_inicial;
     private ImageView img_actual;
@@ -49,7 +52,8 @@ public class DecoloracionActivity extends AppCompatActivity {
     private ImageButton btn_volver;
     private ImageButton btn_terminar;
 
-    private String colores[] = {"AAA7A4", "FFFFFF"};
+    private String colores[] = {"FFFFFF", "F0F0FF", "F0FFF0", "FDFEDA", "FFF0FF", "FFDAFF"};
+    private static int colorSeleccionado = 0;
 
     private final int TOTAL_COLORES = colores.length;
 
@@ -77,6 +81,7 @@ public class DecoloracionActivity extends AppCompatActivity {
     private void inicializarViews(){
 
         tv_id = (TextView)findViewById(R.id.tv_id);
+        txt_nombre = (EditText) findViewById(R.id.txt_nombre);
         tv_estado = (TextView)findViewById(R.id.tv_estado);
 
         img_inicial= (ImageView) findViewById(R.id.img_inicial);
@@ -92,58 +97,109 @@ public class DecoloracionActivity extends AppCompatActivity {
     }
 
     private void inicializarProceso(){
-
-        proceso = new Proceso();
-        proceso.setId(117);
-        proceso.setEstado("Estado actual: Preparando decoloración");
-        proceso.setTiempoDecoloracion(0);
-
-        String strId = proceso.getId() + "";
-
+        final int ID_INVALIDO = -1;
+        dbProceso = new DaoProceso(this);
         colorimetria = new Colorimetria();
 
-        temporizador = new Temporizador(); // Comienza hasta que invoquemos .iniciarReloj(this);
-        temporizador.setNombreDecoloracion(strId);
+        int id = getIntent().getIntExtra("id", ID_INVALIDO);
+
+        proceso = dbProceso.buscar(id);
+
+
+        if(proceso == null){ // Proceso no encontrado o nueva decoloración
+            proceso = new Proceso();
+            proceso.setId(ID_INVALIDO); // Se generara al meterlo a la BD
+            proceso.setNombreCliente("");
+            proceso.setEstado(Proceso.ESTADO_PREPARANDO);
+            proceso.setTiempoDecoloracion(0);
+            proceso.setInicial(0);
+            proceso.setActual(0);
+            proceso.setDeseado(16777215);
+        }
+        else{
+            colorimetria.setColorInicial(proceso.getInicial());
+            colorimetria.setColorActual(proceso.getActual());
+            colorimetria.setColorDeseado(proceso.getDeseado());
+        }
+
+        mostrarDatos();
+
+    }
+
+    private void mostrarDatos(){
+        String strId = String.valueOf(proceso.getId());
 
         extractor = new ExtractorColor(this);
 
-        MyColor colorDeseado = new MyColor();
-        //int pos = sugerirColorTinte();
-        colorDeseado.setValorHexadecimal("FFFFFF"); // Le damos un valor hexadecimal
+        cambiarColor();
+        MyColor colorDeseado = new MyColor(colores[colorSeleccionado]);
+
+        if(proceso != null){ // Proceso ya en curso
+            colorDeseado.setValor(proceso.getDeseado().getValor());
+            img_inicial.setBackgroundColor(proceso.getInicial().getValorView());
+            img_actual.setBackgroundColor(proceso.getActual().getValorView());
+        }
+
 
 
         tv_id.setText(strId);
 
+        txt_nombre.setText(proceso.getNombreCliente());
+
         img_final.setBackgroundColor(colorDeseado.getValorView());
 
-        btn_iniciar.setEnabled(false); // No lo activamos hasta que preparemos todo
-
+        btn_iniciar.setEnabled(false);
     }
 
-    private int sugerirColorTinte(){
+    private String definirMensajeEstado(String estado){
+        String msg = "";
+        if(estado == Proceso.ESTADO_PREPARANDO){
+            msg = "Preparando decoloración";
+        }
+        else if(estado == Proceso.ESTADO_ACTIVO){
+            msg = "Decolorando";
+        }
+        else if(estado == Proceso.ESTADO_TERMINADO){
+            msg = "Decoloración exitosa";
+        }
+        else{
+            msg = "Cabello arruinado";
+        }
 
+        return msg;
+    }
+
+    private void sugerirColorTinte(){
         Random random = new Random();
-        int pos = random.nextInt(TOTAL_COLORES - 0) + 0;
+        colorSeleccionado  = random.nextInt(TOTAL_COLORES - 0) + 0;
+    }
 
-        return pos;
+    //Cambia de manera lineal el color, llega al final y reinicia desde 0
+    private void cambiarColor(){
+        colorSeleccionado++;
+        if(colorSeleccionado >= TOTAL_COLORES-1){
+            colorSeleccionado = 0;
+        }
     }
 
     private void actualizarEstadoActual(Bitmap foto){
         if(activo){
             MyColor color = extractor.extraerColor(foto);
-            String estado = "Actualización: ";
+            String estado = "Estado: ";
             String resultadoAnalisis;
-            colorimetria.setColorActual(color);
 
-            img_actual.setBackgroundColor(color.getValorView());
+            img_actual.setBackgroundColor(color.getValorView()); // Cambiamos color actual
+
+            colorimetria.setColorActual(color);
             resultadoAnalisis = colorimetria.obtenerEstado();
-            //Comparar para actualizar le estado
-            estado += resultadoAnalisis;
+
+            estado += definirMensajeEstado(resultadoAnalisis);
             tv_estado.setText(estado);
-            if(resultadoAnalisis == "Cabello arruinado"){
-                temporizador.pararReloj();
+
+            if(resultadoAnalisis == Proceso.ESTADO_ARRUINADO){
                 btn_foto.setEnabled(false);
             }
+            actualizarProceso();
         }
         else{ //No se ha iniciado la decoloración y se debe tomar la primer foto
             actualizarFotoInicial(foto);
@@ -174,19 +230,45 @@ public class DecoloracionActivity extends AppCompatActivity {
     public void iniciarDecoloracion(View view){
         activo = true;
 
-        tv_estado.setText("Actualización: Decoloración iniciada");
+        proceso.setEstado(Proceso.ESTADO_ACTIVO);
+
+        tv_estado.setText("Estado: " + definirMensajeEstado(proceso.getEstado()));
 
         btn_iniciar.setEnabled(false); // No volvera a ser utilizado
 
-        temporizador.iniciarReloj(this);
+        registrarProceso();
+
     }
 
     public void detenerDecoloración(View view){
         tv_estado.setText("Decoloración finalizada");
         btn_foto.setEnabled(false);
 
-        temporizador.pararReloj();
+    }
 
+    public void registrarProceso(){
+        proceso.setNombreCliente(txt_nombre.getText().toString());
+        proceso.setEstado(Proceso.ESTADO_ACTIVO);
+        proceso.setInicial(colorimetria.getColorInicial().getValor());
+        proceso.setActual(colorimetria.getColorActual().getValor());
+        proceso.setDeseado(colorimetria.getColorDeseado().getValor());
+        //dbProceso.crear(proceso);
+        mostrarMensaje(String.valueOf(dbProceso.crear(proceso)));
+    }
+
+    public void actualizarProceso(){
+        proceso.setInicial(colorimetria.getColorInicial().getValor());
+        proceso.setActual(colorimetria.getColorActual().getValor());
+        proceso.setDeseado(colorimetria.getColorDeseado().getValor());
+        dbProceso.actualizar(proceso);
+    }
+
+    public void editarProceso(){
+
+    }
+
+    public void mostrarMensaje(String text){
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 
     // Funciones de la camara

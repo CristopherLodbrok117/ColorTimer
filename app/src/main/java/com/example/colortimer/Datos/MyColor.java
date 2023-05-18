@@ -8,6 +8,12 @@ public class MyColor {
     private int valor; // Valor real rgb, sin embargo las views no leen correctamente este valor (setBackgroundColor())
     private int valorView; // Diferente valor genera el mismo color rgb, pero este si es aceptado por las views
 
+    public int RGB = 1;
+    public int RGB_LUMA = 1;
+    public int RGB_BRIGHT = 1;
+    public int RGB_LUMINOSITY = 1;
+    public int RGB_GREYSCALE = 1;
+
     public MyColor() {
         this.id = 0;
         this.valor = 0;
@@ -111,51 +117,33 @@ public class MyColor {
      * Regresa -1 si ya se excedio la decoloración
      * */
     public int evaluarDiferencia(MyColor cd){
-        /*
-        final int DIFERENCIA_ACEPTABLE = 150;
 
-        // Resultado deseado - actual
-        int difR = cd.getRed() - getRed();
-        int difG = cd.getGreen() - getGreen();
-        int difB = cd.getBlue() - getBlue();
+        final int RGB_RANGO = 215;
 
+        int coincidencia = 0;
+        coincidencia += evaluarBrillo(cd);
+        coincidencia += evaluarLuma(cd);
+        coincidencia += evaluarLuminosidad(cd);
+        coincidencia += evaluarGreysCale(cd);
 
-        if((difR >= -DIFERENCIA_ACEPTABLE && difR <= DIFERENCIA_ACEPTABLE)
-                && (difG >= -DIFERENCIA_ACEPTABLE && difG <= DIFERENCIA_ACEPTABLE)
-                && (difB >= -DIFERENCIA_ACEPTABLE && difB <= DIFERENCIA_ACEPTABLE)){
-            return -1; // Aun no se ha igualado ningun componente rgb
+        if((coincidencia > 0) && getRed() >= RGB_RANGO && getGreen() >= RGB_RANGO && getBlue() >= RGB_RANGO){
+            return 1;
         }
+        else {
+            return -1;
+        }
+    }
 
-        else{
-            return 1; // Continuar
-        }*/
-        // sqrt
-        /*
-        long deseado = colorDeseado.getValor();
-        long actual = valor;
+    public String evaluarDiferenciaStr(MyColor colorDeseado){
+        final int DIFERENCIA_ACEPTABLE = 110;
+        float fraction= .75f;
+        Object str = new ArgbEvaluator().evaluate(fraction, valorView, colorDeseado.getValorView());
 
-        long rmean = ( (long)getRed() + (long)colorDeseado.getRed() ) / 2;
-        long r = (long)getRed() - (long)colorDeseado.getRed();
-        long g = (long)getGreen() - (long)colorDeseado.getGreen();
-        long b = (long)getBlue() - (long)colorDeseado.getBlue();
 
-        double distance = Math.sqrt((((512+rmean)*r*r)>>8) + 4*g*g + (((767-rmean)*b*b)>>8));
+        return str.toString();
+    }
 
-        return (int)distance;
-        */
-         //A partir del brillo, funciona para blanco
-        /*
-        double brillo1 = Math.sqrt( (0.299*(Math.pow(getRed(), 2))) + (0.587*(Math.pow(getGreen(), 2))) +
-                (0.114*(Math.pow(getBlue(), 2))) );
-        double brillo2 = Math.sqrt( (0.299*(Math.pow(cd.getRed(), 2))) + (0.587*(Math.pow(cd.getGreen(), 2))) +
-                (0.114*(Math.pow(cd.getBlue(), 2))) );
-
-        double diff = brillo1 - brillo2;
-        int diferencia = (int)diff - 255;
-        return diferencia;
-
-*/
-        //Formula luma 1, buena para color blanco
+    public int evaluarLuma(MyColor cd){
         final int DIFERENCIA_ACEPTABLE = 10;
         double luma1 = (0.2126 * getRed()) + (0.7152 * getGreen()) + (0.0722 * getBlue());
         double luma2 = (0.2126 * cd.getRed()) + (0.7152 * cd.getGreen()) + (0.0722 * cd.getBlue());
@@ -163,22 +151,14 @@ public class MyColor {
         double result = ((int)luma1 - (int)luma2) - 255;
 
         if(result >= -DIFERENCIA_ACEPTABLE && result <= DIFERENCIA_ACEPTABLE){
-            return -1;
-        }
-        else{
             return 1;
         }
+        else{
+            return RGB_LUMA;
+        }
+    }
 
-
-        // Luma 2
-        /*double luma1 = (0.299 * getRed()) + (0.587 * getGreen()) + (0.114 * getBlue());
-        double luma2 = (0.299 * cd.getRed()) + (0.587 * cd.getGreen()) + (0.114 * cd.getBlue());
-
-        double result = luma1 - luma2;
-
-        return (int)result;*/
-
-        /*
+    public int evaluarLuminosidad(MyColor cd){
         int r = (valor >> 16) & 0xff;
         int g = (valor >> 8) & 0xff;
         int b = valor & 0xff;
@@ -189,10 +169,17 @@ public class MyColor {
         int b2 = cd.getValor() & 0xff;
         int luz2 = (r2 + g2 + b2) / 3;
 
-        return luz2 - luz1;*/
+        int cantidadLuz = luz1 + luz2;
 
-        //Escala de grises
-        /*int pixel1 = (getRed() + getGreen() + getBlue()) / 3;
+        if(cantidadLuz > 0){
+            return cantidadLuz;
+        }
+
+        return RGB_LUMINOSITY;
+    }
+
+    public int evaluarGreysCale(MyColor cd){
+        int pixel1 = (getRed() + getGreen() + getBlue()) / 3;
         int pixel2 = (cd.getRed() + cd.getGreen() + cd.getBlue()) / 3;
 
         MyColor gris1 = new MyColor();
@@ -206,18 +193,23 @@ public class MyColor {
         int color1 = (gris1.getRed() + gris1.getGreen() + gris1.getBlue() );
         int color2 = (gris2.getRed() + gris2.getGreen() + gris2.getBlue() );
 
-        return color2 - color1;
-        */
-
+        return RGB_GREYSCALE;
     }
 
-    public String evaluarDiferenciaStr(MyColor colorDeseado){
-        final int DIFERENCIA_ACEPTABLE = 110;
-        float fraction= .75f;
-        Object str = new ArgbEvaluator().evaluate(fraction, valorView, colorDeseado.getValorView());
+    public int evaluarBrillo(MyColor cd){
+        double brillo1 = Math.sqrt( (0.299*(Math.pow(getRed(), 2))) + (0.587*(Math.pow(getGreen(), 2))) +
+                (0.114*(Math.pow(getBlue(), 2))) );
+        double brillo2 = Math.sqrt( (0.299*(Math.pow(cd.getRed(), 2))) + (0.587*(Math.pow(cd.getGreen(), 2))) +
+                (0.114*(Math.pow(cd.getBlue(), 2))) );
 
-
-        return str.toString();
+        double diff = brillo1 - brillo2;
+        int diferencia = (int)diff - 255;
+        if(diferencia > 0){
+            return diferencia;
+        }
+        else{
+            return RGB_BRIGHT;
+        }
     }
 
     public static String convertirAHexadecimal(int decimal) {

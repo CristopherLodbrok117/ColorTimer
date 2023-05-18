@@ -6,19 +6,31 @@ public class Proceso {
     private int tiempoDecoloracion;
     private String estado;
 
+    private MyColor inicial;
+    private MyColor actual;
+    private MyColor deseado;
 
 
+
+    public static final String ESTADO_PREPARANDO = "P";
     public static final String ESTADO_ACTIVO = "A";
-    public static final String ESTADO_INACTIVO = "I";
+    public static final String ESTADO_TERMINADO = "T";
+    public static final String ESTADO_ARRUINADO = "X";
+
 
     public Proceso(){
-        this(0,"", 0, ESTADO_ACTIVO);
+        this(0,"", 0, ESTADO_ACTIVO, 0, 0, 0);
     }
-    public Proceso(int id, String nombreCliente, int tiempoDecoloracion, String estado){
+    public Proceso(int id, String nombreCliente, int tiempoDecoloracion, String estado,
+                   int inicial, int actual, int deseado){
         this.id = id;
         this.nombreCliente = nombreCliente;
         this.tiempoDecoloracion = tiempoDecoloracion;
         this.estado = estado;
+
+        this.inicial = new MyColor(inicial);
+        this.actual = new MyColor(actual);;
+        this.deseado = new MyColor(deseado);;
     }
 
     public void setId(int id){
@@ -45,6 +57,30 @@ public class Proceso {
 
     public void setNombreCliente(String nombre){
         this.nombreCliente = nombre;
+    }
+
+    public MyColor getInicial() {
+        return inicial;
+    }
+
+    public void setInicial(int inicial) {
+        this.inicial.setValor(inicial);
+    }
+
+    public MyColor getActual() {
+        return actual;
+    }
+
+    public void setActual(int actual) {
+        this.actual.setValor(actual);
+    }
+
+    public MyColor getDeseado() {
+        return deseado;
+    }
+
+    public void setDeseado(int deseado) {
+        this.deseado.setValor(deseado);
     }
 
     @Override

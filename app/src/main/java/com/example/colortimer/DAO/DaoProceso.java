@@ -39,6 +39,9 @@ public class DaoProceso extends ProcesoDBHelper {
             values.put("nombre", proceso.getNombreCliente());
             values.put("tiempoDecoloracion",proceso.getTiempoDecoloracion());
             values.put("estado",proceso.getEstado());
+            values.put("inicial", proceso.getInicial().getValor());
+            values.put("actual", proceso.getActual().getValor());
+            values.put("deseado", proceso.getDeseado().getValor());
             id = db.insert(TABLE_PROCESOS,null,values);
             db.close();
         } catch (SQLException e){
@@ -67,17 +70,17 @@ public class DaoProceso extends ProcesoDBHelper {
         return p;
     }
 
-    public List<Proceso> listarrProcesosActivos() {
+    public List<Proceso> listarProcesosActivos() {
         List<Proceso> procesos = this.listar();
         List<Proceso> procesosActivos = new ArrayList<>();
 
-        procesos.forEach(proceso -> {
+        for(Proceso proceso : procesos){
             if(proceso.getEstado() == Proceso.ESTADO_ACTIVO){
                 procesosActivos.add(proceso);
             }
-        });
+        }
 
-        return procesosActivos;
+        return this.listar();
 
     }
 
@@ -94,7 +97,14 @@ public class DaoProceso extends ProcesoDBHelper {
         try{
             if(cursor.moveToFirst()){
                 do {
-                    a.add(new Proceso(cursor.getInt(0),cursor.getString(1),cursor.getInt(2),cursor.getString(3)));
+                    a.add(new Proceso(cursor.getInt(0),
+                            cursor.getString(1),
+                            cursor.getInt(2),
+                            cursor.getString(3),
+                            cursor.getInt(4),
+                            cursor.getInt(5),
+                            cursor.getInt(6)
+                            ));
                 }while(cursor.moveToNext());
             }
         } catch (Exception e){

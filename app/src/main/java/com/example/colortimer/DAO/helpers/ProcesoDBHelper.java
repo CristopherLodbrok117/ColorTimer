@@ -22,7 +22,9 @@ public class ProcesoDBHelper extends SQLiteOpenHelper {
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," + "nombre VARCHAR(50)," +
                 "tiempoDecoloracion INTEGER," +
                 "estado VARCHAR(1)," +
-                "idtinte INTEGER REFERENCES Tintes(id) DEFAULT NULL" +
+                    "inicial INTEGER," +
+                    "actual INTEGER," +
+                    "deseado INTEGER" +
             ")"
         );
     }
