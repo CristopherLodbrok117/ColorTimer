@@ -4,6 +4,13 @@ import android.animation.ArgbEvaluator;
 import android.graphics.Color;
 
 public class MyColor {
+
+    public static int RESULT_CONTINUE = 0;
+    public static int RESULT_STOP_SUGGESTION = 1;
+    public static int RESULT_STOP_IMMEDIATELY = 2;
+
+    public static int RANGE_LIMIT = 30;
+    public static double DELTA_LIMIT = 20;
     private int id;
     private int valor; // Valor real rgb, sin embargo las views no leen correctamente este valor (setBackgroundColor())
     private int valorView; // Diferente valor genera el mismo color rgb, pero este si es aceptado por las views
@@ -132,6 +139,41 @@ public class MyColor {
         else {
             return -1;
         }
+    }
+
+    /*  Este método calcula la diferencia de los componentes rgb del color actual y el deseado,
+    * si el color actual entra en el rango del color deseado llamara al método euclideanDistance
+    * para evaluar la distancia entre ambos colores,
+    * caso contrario el resultado sera continuar el proceso   */
+    public int evaluarRango(MyColor desiredColor) {
+        int redDiff = Math.abs(this.getRed() - desiredColor.getRed());
+        int greenDiff = Math.abs(this.getGreen() - desiredColor.getGreen());
+        int blueDiff  = Math.abs(this.getBlue() - desiredColor.getBlue());
+
+        if(redDiff <= RANGE_LIMIT && greenDiff <= RANGE_LIMIT && blueDiff <= RANGE_LIMIT) {
+            return euclideanDistance(redDiff, greenDiff, blueDiff);
+        }
+        return MyColor.RESULT_CONTINUE;
+    }
+
+
+    /* Este método recibe la diferencia entre los componentes rgb del color actual y el color
+    * deseado. A partir de la raiz cuadrada de la sumatoria de sus valores al cuadrado se obtiene
+    * la distancia/delta-e entre ambos colores. Si el delta se encuentra dentro del límite estable-
+    * cido devuelve "Detener proceso automaticamente", caso contrario devuelve "Sugerencia para
+    * detener manualmente"
+    * Este método solo debe ser llamado si el color actual y deseado estan dentro del rango estable-
+    * cido*/
+    public int euclideanDistance(int redDiff, int greenDiff, int blueDiff) {
+        final int SQUARE_EXP = 2;
+        double deltaE = Math.sqrt((double)Math.pow(redDiff, SQUARE_EXP)
+                + Math.pow(greenDiff, SQUARE_EXP)
+                + Math.pow(blueDiff, SQUARE_EXP));
+
+        if(deltaE <= DELTA_LIMIT){
+            return MyColor.RESULT_STOP_IMMEDIATELY; // Cabello arruinado
+        }
+        return MyColor.RESULT_STOP_SUGGESTION; // Candidato a detenerse (suficientemente cerca)
     }
 
     public String evaluarDiferenciaStr(MyColor colorDeseado){
